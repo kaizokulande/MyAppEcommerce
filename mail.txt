@@ -1,0 +1,8 @@
+/*--------------Creation shop-------------------*/
+nom sama
+votre shop nom_shop a ete cree avec succes sur kaibai.
+
+KAIBAIでのショップ作成が施行しました。nom_shopの機能とサービスが利用いただけます。
+
+
+

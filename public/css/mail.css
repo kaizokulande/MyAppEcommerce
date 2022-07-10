@@ -1,0 +1,16 @@
+.m_footer{
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid;
+}
+.logo{
+    float: left;
+    margin-right: 50px;
+}
+.logo img{
+    width:100px;
+    height: 100px;
+}
+.m_contact{
+    padding-top: 15px;
+}
