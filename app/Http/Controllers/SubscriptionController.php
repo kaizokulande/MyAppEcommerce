@@ -14,19 +14,7 @@ class SubscriptionController extends Controller
 {
     public function view_subscription(){
         $subscriptions = Subscription::all();
-        if (Auth::check()) {
-            if (Gate::allows('isNotSubscribed')) {
-                return view("subscription",compact('subscriptions'));
-            }else if(Gate::allows('isSubscribed')){
-                if(Gate::allows('shopExist')){
-                    return view("subscription",compact('subscriptions'));
-                }else{
-                    return view('createshop');
-                }
-            }
-        }else{
-            return view("subscription",compact('subscriptions'));
-        }
+        return view("subscription",compact('subscriptions'));
     }
     public function view_subscribed(){
         $subscriptions = Subscription::all();

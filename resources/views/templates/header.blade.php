@@ -54,18 +54,21 @@
                             @endforeach
                         @endif
                         @if (!Auth::check())
-                            <a href="/plans">ショップ作成</a>
+                            <a href="/plans">プランを見る</a>
+                            <a href="/createshop">ショップ作成</a>
                         @endif
                         @can('isNotSubscribed')
-                            <a href="/plans">ショップ作成</a>
-                        @endcan
-                        @can('isSubscribed')
                             @can('shopnotExist')
-                                <a href="/plans">ショップ作成</a>
+                                <a href="/createshop">ショップ作成</a>
+                                <a href="/plans">プランを見る</a>
                             @endcan
                             @can('shopExist')
                                 <a href="/plans">プランを変える</a>
                             @endcan
+                        @endcan
+                        @can('isSubscribed')
+                            <a href="/createshop">ショップ作成</a>
+                            <a href="/plans">プランを変える</a>
                         @endcan
                     </div>
                 </div>

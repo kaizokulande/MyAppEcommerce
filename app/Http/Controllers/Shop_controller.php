@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Shop;
 use App\Models\User_admin;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -14,31 +14,34 @@ class Shop_controller extends Base_controller
 {
     function create_chop(Request $request){
         if(Auth::check()){
-            $request->validate([
-                'shop_name' => 'required | unique:shops,shop_name',
-                'phone' => 'required','max:20',
-                'email' => 'required | email | unique:shops,shop_email'
-            ]);
-            $phone_number_validation_regex = "^\d{2}(?:-\d{4}-\d{4}|\d{8}|\d-\d{3,4}-\d{4})$^";
-            $preg = preg_match($phone_number_validation_regex, $request->phone);
-            if($preg == 0){
-                return redirect('createshop')->with('phone_error','電話番号は正しくありませんでした。');
-            }
-            $t_email = trim($request->email);
-            $user = Auth::user();
-            DB::beginTransaction();
-            try{
-                Shop::create_shop($user->id,$request->shop_name,$request->phone,$t_email);
-                DB::table('user_shop_subscriptions')
-                            ->where('id_user', $user->id)
-                            ->update(['validity' => 0]);
-                DB::commit();
-                Mail::to($user->email)->send(new CreationShopMail('ショップ作成おめでとうございます！',$user->firstname,$user->lastname,$request->shop_name));
-                return redirect()->route('createshop')->with('success','Shop created successfuly');
-            }catch(\Exception $e){
-                dd($e);
-                DB::rollback();
-                return redirect()->route('plans')->with('error_subs','エラーがありました！！');
+            if(Gate::allows('canCreateshopNotsubscribed')){
+                $request->validate([
+                    'shop_name' => 'required | unique:shops,shop_name',
+                    'phone' => 'required','max:20',
+                    'email' => 'required | email | unique:shops,shop_email'
+                ]);
+                $phone_number_validation_regex = "^\d{2}(?:-\d{4}-\d{4}|\d{8}|\d-\d{3,4}-\d{4})$^";
+                $preg = preg_match($phone_number_validation_regex, $request->phone);
+                if($preg == 0){
+                    return redirect('createshop')->with('phone_error','電話番号は正しくありませんでした。');
+                }
+                $t_email = trim($request->email);
+                $user = Auth::user();
+                DB::beginTransaction();
+                try{
+                    Shop::create_shop($user->id,$request->shop_name,$request->phone,$t_email);
+                    DB::table('user_shop_subscriptions')
+                                ->where('id_user', $user->id)
+                                ->update(['validity' => 0]);
+                    DB::commit();
+                    Mail::to($user->email)->send(new CreationShopMail('ショップ作成おめでとうございます！',$user->firstname,$user->lastname,$request->shop_name));
+                    return redirect()->route('createshop')->with('success','Shop created successfuly');
+                }catch(\Exception $e){
+                    DB::rollback();
+                    return redirect()->route('plans')->with('error_subs','エラーがありました！！');
+                }
+            }else{
+                return redirect('createshop')->with('error_log','ショップを作成されています。プランに登録してください。');
             }
         }else{
             return redirect()->route('createshop')->with('error_log','Please login first Or Register if you have no account');

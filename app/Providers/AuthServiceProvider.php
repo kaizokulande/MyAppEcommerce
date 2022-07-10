@@ -40,9 +40,21 @@ class AuthServiceProvider extends ServiceProvider
                 return 'isSubscribed';
             }
         });
+        Gate::define('canCreateshopNotsubscribed',function($id_user){
+            $number_shop = collect(\DB::table('shops')->where('id_user','=',$id_user->id)->count())->first();
+            if($number_shop<1){
+                return 'canCreateshopNotsubscribed';
+            }
+        });
+        /* Gate::define('canCreateshopNotsubscribed',function($id_user){
+            $number_shop = collect(\DB::table('shops')->where('id_user','=',$id_user->id)->count())->first();
+            if($number_shop<1){
+                return 'canCreateshopNotsubscribed';
+            }
+        }); */
         /* if has a shop or not */
         Gate::define('shopnotExist', function ($id_user) {
-            $subscription = collect(\DB::table('user_shop_subscriptions')->where('id_user','=',$id_user->id)->where('validity','=',0)->get())->first();
+            $subscription = collect(\DB::table('shops')->where('id_user','=',$id_user->id)->where('validity','=',0)->get())->first();
             if($subscription==null){
                 return 'shopnotExist';
             }
@@ -75,6 +87,7 @@ class AuthServiceProvider extends ServiceProvider
                 }
             }
         });
+
         
     }
 }
