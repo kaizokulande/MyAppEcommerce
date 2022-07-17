@@ -48,18 +48,55 @@
                     </table><br/>
                     <div class="page-list">
                         @if ($total_page>1)
-                            @if ($prev_page > 0)
-                                <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
-                            @endif
-                            @for ($page = 1;$page<=$total_page;$page++)
-                                @if ($current_page == $page)
-                                <div class="page-white">{{$page}}</div>
-                                @else
-                                <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$page}}/{{$order}}/{{$col_name}}"><button>{{$page}}</button></a></div>
+                            @if ($total_page < 6)
+                                @if ($prev_page > 0)
+                                    <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
                                 @endif
-                            @endfor
-                            @if ($next_page<=$total_page)
-                                <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                @for ($page = 1;$page<=$total_page;$page++)
+                                    @if ($current_page == $page)
+                                    <div class="page-white">{{$page}}</div>
+                                    @else
+                                    <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$page}}/{{$order}}/{{$col_name}}"><button>{{$page}}</button></a></div>
+                                    @endif
+                                @endfor
+                                @if ($next_page<=$total_page)
+                                    <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                @endif
+                            @else  
+                                @if ($current_page < 4)
+                                    @if ($prev_page > 0)
+                                        <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
+                                    @endif
+                                    @for ($page = 1;$page<= 4;$page++)
+                                        @if ($current_page == $page)
+                                        <div class="page-white">{{$page}}</div>
+                                        @else
+                                        <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$page}}/{{$order}}/{{$col_name}}"><button>{{$page}}</button></a></div>
+                                        @endif
+                                    @endfor
+                                    <span> ...</span>
+                                    <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$total_page-1}}/{{$order}}/{{$col_name}}"><button>{{$total_page-1}}</button></a></div>
+                                    <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$total_page}}/{{$order}}/{{$col_name}}"><button>{{$total_page}}</button></a></div>
+                                    <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                @else
+                                    <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
+                                    <div class="page"><a href="/{{$shop->shop_name}}/stock/1/{{$order}}/{{$col_name}}"><button>1</button></a></div>
+                                    <span> ...</span>
+                                    <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$current_page-1}}/{{$order}}/{{$col_name}}"><button>{{$current_page-1}}</button></a></div>
+                                    <div class="page-white">{{$current_page}}</div>
+                                    @if($current_page+1<$total_page)
+                                        <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$current_page+1}}/{{$order}}/{{$col_name}}"><button>{{$current_page+1}}</button></a></div>
+                                    @endif
+                                    @if($current_page<$total_page-2)
+                                    <span> ...</span>
+                                    @endif
+                                    @if($current_page<$total_page)
+                                        <div class="page"><a href="/{{$shop->shop_name}}/stock/{{$total_page}}/{{$order}}/{{$col_name}}"><button>{{$total_page}}</button></a></div>
+                                    @endif
+                                    @if($current_page<$total_page)
+                                        <div class="page-surf"><a href="/{{$shop->shop_name}}/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                    @endif
+                                @endif
                             @endif
                         @endif
                     </div>

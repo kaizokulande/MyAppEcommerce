@@ -40,21 +40,32 @@ class AuthServiceProvider extends ServiceProvider
                 return 'isSubscribed';
             }
         });
+        Gate::define('isSubscribedShop', function ($id_user) {
+            $shop_ses = session()->get('shop_ses');
+            if($shop_ses!=null){
+                $shop = collect(\DB::table('shops')->where('id_shop','=',$shop_ses['id_shop'])->get())->first();
+                $user_subscription = collect(\DB::table('v_user_subscription')->where('id_user','=',$shop->id)->get())->first();
+                if($user_subscription!=null){
+                    return 'isSubscribedShop';
+                }
+            }
+        });
         Gate::define('canCreateshopNotsubscribed',function($id_user){
-            $number_shop = collect(\DB::table('shops')->where('id_user','=',$id_user->id)->count())->first();
+            $number_shop = collect(\DB::table('shops')->where('id','=',$id_user->id)->count())->first();
             if($number_shop<1){
                 return 'canCreateshopNotsubscribed';
             }
         });
-        /* Gate::define('canCreateshopNotsubscribed',function($id_user){
-            $number_shop = collect(\DB::table('shops')->where('id_user','=',$id_user->id)->count())->first();
-            if($number_shop<1){
-                return 'canCreateshopNotsubscribed';
+        Gate::define('canCreateshopsubscribed',function($id_user){
+            $user_subscription = collect(\DB::table('v_user_subscription')->where('id_user','=',$id_user->id)->get())->first();
+            $number_shop = collect(\DB::table('shops')->where('id','=',$id_user->id)->count())->first();
+            if($number_shop<=$user_subscription->shops_number){
+                return 'canCreateshopsubscribed';
             }
-        }); */
+        });
         /* if has a shop or not */
         Gate::define('shopnotExist', function ($id_user) {
-            $subscription = collect(\DB::table('shops')->where('id_user','=',$id_user->id)->where('validity','=',0)->get())->first();
+            $subscription = collect(\DB::table('user_shop_subscriptions')->where('id_user','=',$id_user->id)->where('validity','=',0)->get())->first();
             if($subscription==null){
                 return 'shopnotExist';
             }
@@ -87,7 +98,30 @@ class AuthServiceProvider extends ServiceProvider
                 }
             }
         });
+        /* verify articles number  */
+        Gate::define('canUploadArticle',function($id_user){
+            $shop_ses = session()->get('shop_ses');
+            if($shop_ses!=null){
+                $shop = collect(\DB::table('shops')->where('id_shop','=',$shop_ses['id_shop'])->get())->first();
+                $number_articles = collect(\DB::table('articles')->where('id_creator_shop','=',$shop->id)->count())->first();
+                $user_subscription = collect(\DB::table('v_user_subscription')->where('id_user','=',$shop->id)->get())->first();
+                if($number_articles<$user_subscription->article_limit){
+                    return 'canUploadArticle';
+                }
+            }
+        });
 
-        
+        /* verify admins number */
+        Gate::define('canAddAdmins',function($id_user){
+            $shop_ses = session()->get('shop_ses');
+            if($shop_ses!=null){
+                $shop = collect(\DB::table('shops')->where('id_shop','=',$shop_ses['id_shop'])->get())->first();
+                $number_admins = collect(\DB::table('admin_shop')->where('id_creator','=',$shop->id)->count())->first();
+                $user_subscription = collect(\DB::table('v_user_subscription')->where('id_user','=',$shop->id)->get())->first();
+                if($number_admins<$user_subscription->admin_limit){
+                    return 'canAddAdmins';
+                }
+            }
+        });
     }
 }

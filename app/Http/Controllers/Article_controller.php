@@ -29,7 +29,7 @@ class Article_controller extends Base_controller
             $s_path = parent::small_folders($shop_name);
             $small_path = $s_path.''.$filename;
             parent::image_upload($imgfile,$big_path,$small_path);
-            $sql= "INSERT INTO articles(id,id_shop,id_categorie,article_name,color,sizes,quantity,price,creation_date,descriptions,total_price,large_images,small_images,states) VALUES('%s',0,'%s','%s','%s','%s','%s','%s',NOW(),'%s',calctotal('%s','%s'),'%s','%s','on sale')";
+            $sql= "INSERT INTO articles(id,id_creator_shop,id_shop,id_categorie,article_name,color,sizes,quantity,price,creation_date,descriptions,total_price,large_images,small_images,states) VALUES('%s',0,0,'%s','%s','%s','%s','%s','%s',NOW(),'%s',calctotal('%s','%s'),'%s','%s','on sale')";
             $sql = DB::insert(sprintf($sql,$user->id,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path));
             $success_mess = 'Your article has benn uploaded successfuly. Click here if you wat to see it.';
             return redirect('sellarticle')->with('success',$success_mess);

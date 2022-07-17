@@ -81,7 +81,7 @@
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="/{{$shop->shop_name}}/addarticle">商品を加える</a></li>
                                         <li><a href="/{{$shop->shop_name}}/stock">ストック</a></li>
-										<li><a href="/{{$shop->shop_name}}/shop_solded">売れた商品</a></li>
+										<li><a href="/{{$shop->shop_name}}/shop_solded">売られた商品</a></li>
 										<li><a href="/{{$shop->shop_name}}/setting">設定</a></li>
                                     </ul>
                                 </li>

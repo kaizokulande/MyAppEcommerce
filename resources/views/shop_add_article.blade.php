@@ -8,12 +8,12 @@
                     <div class="article_image"><img id="article_img" src="{{ asset('../images/default-image.jpg') }}"></div><br/>
                     @if(session('error_log'))
                     <div class="danger">
-                    {{session('error_log')}} <a href="#">Click here</a>
+                    {{session('error_log')}}
                     </div><br/>
                     @endif
                     @if(session('success'))
                     <div class="success"><br>
-                    {{session('success')}} <a href="#">Click here</a>
+                    {{session('success')}}
                     </div><br/>
                     @endif
                     <form method="post" onsubmit="addbreak()" action="/{{$shop->shop_name}}/upload_article" enctype="multipart/form-data">@csrf

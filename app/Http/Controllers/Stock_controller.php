@@ -46,30 +46,34 @@ class Stock_controller extends Base_controller
         $article = Article_controller::get_article($request->id_article);
         $shop_name = null;
         if(Auth::check()){
-            $user = Auth::user();
-            $request->validate([
-                'name' => 'required',
-                'price' => 'required | gte:100 | lte:100000001',
-                'size' => 'required',
-                'quantity' => 'required | gte:1',
-            ]);
-            $description = parent::space_nl($request->description);
-            $imgfile = $request->image;
-            $filename="";
-            if($imgfile == null){
-                $filename = Str::substr($article->large_images, 11);
+            if(Gate::allows('isSubscribed')){
+                $user = Auth::user();
+                $request->validate([
+                    'name' => 'required',
+                    'price' => 'required | gte:100 | lte:100000001',
+                    'size' => 'required',
+                    'quantity' => 'required | gte:1',
+                ]);
+                $description = parent::space_nl($request->description);
+                $imgfile = $request->image;
+                $filename="";
+                if($imgfile == null){
+                    $filename = Str::substr($article->large_images, 11);
+                }else{
+                    $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();
+                }
+                $b_path = parent::big_folders($shop_name);
+                $big_path = $b_path.''.$filename;
+                $s_path = parent::small_folders($shop_name);
+                $small_path = $s_path.''.$filename;
+                parent::image_upload($imgfile,$big_path,$small_path);
+                $sql= "UPDATE articles SET id_categorie ='%s', article_name='%s', color='%s', sizes='%s', quantity='%s', price='%s', creation_date=NOW(), descriptions='%s', total_price = calctotal('%s','%s'), large_images='%s', small_images='%s', states='on sale' WHERE id_article='%s'";
+                $sql = DB::update(sprintf($sql,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path,$request->id_article));
+                $success_mess = 'この商品はアップデートされました。';
+                return redirect('up_article/'.$article->id_article.'/'.$request->name)->with('success',$success_mess);
             }else{
-                $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
             }
-            $b_path = parent::big_folders($shop_name);
-            $big_path = $b_path.''.$filename;
-            $s_path = parent::small_folders($shop_name);
-            $small_path = $s_path.''.$filename;
-            parent::image_upload($imgfile,$big_path,$small_path);
-            $sql= "UPDATE articles SET id_categorie ='%s', article_name='%s', color='%s', sizes='%s', quantity='%s', price='%s', creation_date=NOW(), descriptions='%s', total_price = calctotal('%s','%s'), large_images='%s', small_images='%s', states='on sale' WHERE id_article='%s'";
-            $sql = DB::update(sprintf($sql,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path,$request->id_article));
-            $success_mess = 'この商品はアップデートされました。';
-            return redirect('up_article/'.$article->id_article.'/'.$request->name)->with('success',$success_mess);
         }else{
             return redirect('/');
         }

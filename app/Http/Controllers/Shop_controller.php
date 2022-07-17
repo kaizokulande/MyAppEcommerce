@@ -14,7 +14,7 @@ class Shop_controller extends Base_controller
 {
     function create_chop(Request $request){
         if(Auth::check()){
-            if(Gate::allows('canCreateshopNotsubscribed')){
+            if(Gate::allows('canCreateshopNotsubscribed')||Gate::allows('canCreateshopsubscribed')){
                 $request->validate([
                     'shop_name' => 'required | unique:shops,shop_name',
                     'phone' => 'required','max:20',
@@ -106,28 +106,36 @@ class Shop_controller extends Base_controller
     function upload_article(Request $request){
         $shop = Shop::get_shop($request->shop_name);
         if(Auth::check()){
-            $user = Auth::user();
-            $request->validate([
-                'image' => 'required | mimes:jpeg,png',
-                'name' => 'required',
-                'price' => 'required | gte:100 | lte:1000001',
-                'size' => 'required',
-                'quantity' => 'required | gte:1',
-            ]);
-            $description = parent::space_nl($request->description);
-            $imgfile = $request->image;
-            $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();
-            $b_path = parent::big_folders($shop->shop_name);
-            $big_path = $b_path.''.$filename;
-            $s_path = parent::small_folders($shop->shop_name);
-            $small_path = $s_path.''.$filename;
-            parent::image_upload($imgfile,$big_path,$small_path);
-            $sql= "INSERT INTO articles(id,id_shop,id_categorie,article_name,color,sizes,quantity,price,creation_date,descriptions,total_price,large_images,small_images,states) VALUES('%s','%s','%s','%s','%s','%s','%s','%s',NOW(),'%s',calctotal('%s','%s'),'%s','%s','on sale')";
-            $sql = DB::insert(sprintf($sql,$user->id,$shop->id_shop,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path));
-            $success_mess = 'Your article has benn uploaded successfuly. Click here if you wat to see it.';
-            return redirect('/'.$shop->shop_name.'/addarticle')->with('success',$success_mess);
+            if(Gate::allows('isSubscribedShop')){
+                if(Gate::allows('canUploadArticle')){
+                    $user = Auth::user();
+                    $request->validate([
+                        'image' => 'required | mimes:jpeg,png',
+                        'name' => 'required',
+                        'price' => 'required | gte:100 | lte:100000001',
+                        'size' => 'required',
+                        'quantity' => 'required | gte:1',
+                    ]);
+                    $description = parent::space_nl($request->description);
+                    $imgfile = $request->image;
+                    $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();
+                    $b_path = parent::big_folders($shop->shop_name);
+                    $big_path = $b_path.''.$filename;
+                    $s_path = parent::small_folders($shop->shop_name);
+                    $small_path = $s_path.''.$filename;
+                    parent::image_upload($imgfile,$big_path,$small_path);
+                    $sql= "INSERT INTO articles(id,id_creator_shop,id_shop,id_categorie,article_name,color,sizes,quantity,price,creation_date,descriptions,total_price,large_images,small_images,states) VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s',NOW(),'%s',calctotal('%s','%s'),'%s','%s','on sale')";
+                    $sql = DB::insert(sprintf($sql,$user->id,$shop->id,$shop->id_shop,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path));
+                    $success_mess = 'Your article has benn uploaded successfuly. Click here if you wat to see it.';
+                    return redirect('/'.$shop->shop_name.'/addarticle')->with('success',$success_mess);
+                }else{
+                    return redirect('/'.$shop->shop_name.'/addarticle')->with('error_log','商品量のリミット以上を売れません。商品量のリミット以上を売りたい時はプランをアップデートしてください！！');
+                }
+            }else{
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
+            }
         }else{
-            return redirect('shop/'.$shop->shop_name)->with('error_log','Please login first Or Register if no account');
+            return redirect('/'.$shop->shop_name.'/addarticle')->with('error_log','Please login first Or Register if no account');
         }
     }
     function view_shop_article(Request $request){

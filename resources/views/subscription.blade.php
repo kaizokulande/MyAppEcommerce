@@ -26,7 +26,7 @@
                     <div class="subs-text"><span>{{ number_format($subs->subs_price) }}円</span></div>
                     <div class="line-subs"></div>
                     <div class="subs-notice"><span>{{$subs->text_notice}}</span></div>
-                    <div class="subs-text"><span>{{$subs->subs_text}}</span></div>
+                    <div class="subs-text"><span>{!! $subs->subs_text !!}</span></div>
                     <div class="line-subs"></div>
                     <div class="subs-notice"><span>{{$subs->duration_notice}}</span></div>
                     <div class="subs-text"><span>{{$subs->subs_duration_text}}</span></div>

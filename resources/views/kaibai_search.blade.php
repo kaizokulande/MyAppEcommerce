@@ -70,7 +70,7 @@
                                     <a href="/article/{{$art->id_article}}/{{$art->article_name}}"><p class="title">{{$art->article_name}}</p></a>
                                     @if(Auth::check() && $art->id == Auth::id())
                                     @else
-                                    <button class="cart_button" href="{!! route('add_to_cart', ['article'=>$art->id_article]) !!}" id="add" ><i class="fas fa-shopping-cart" aria-hidden="true"></i> <span class="v-btn">Add to cart</span></button>
+                                    <button class="cart_button" href="{!! route('add_to_cart', ['article'=>$art->id_article]) !!}" id="add" ><i class="fas fa-shopping-cart v-btn" aria-hidden="true"></i> <span class="v-btn">Add to cart</span></button>
                                     @endif
                                 </div>
                             </div>
@@ -82,19 +82,56 @@
             </div>
         </div>
         <div class="page-list">
-            @if ($total_page>1)
-                @if ($prev_page > 0)
-                    <div class="page-surf"><a href="/articles/{{$search}}/page/{{$prev_page}}"><button><< </button></a></div>
-                @endif
-                @for ($page = 1;$page<=$total_page;$page++)
-                    @if ($current_page == $page)
-                    <div class="page-white">{{$page}}</div>
-                    @else
-                    <div class="page"><a href="/articles/{{$search}}/page/{{$page}}"><button>{{$page}}</button></a></div>
+        @if ($total_page>1)
+                @if ($total_page < 6)
+                    @if ($prev_page > 0)
+                        <div class="page-surf"><a href="/articles/{{$search}}/page/{{$prev_page}}"><button><< </button></a></div>
                     @endif
-                @endfor
-                @if ($next_page<=$total_page)
-                    <div class="page-surf"><a href="/articles/{{$search}}/page/{{$next_page}}"><button>>> </button></a></div>
+                    @for ($page = 1;$page<=$total_page;$page++)
+                        @if ($current_page == $page)
+                        <div class="page-white">{{$page}}</div>
+                        @else
+                        <div class="page"><a href="/articles/{{$search}}/page/{{$page}}"><button>{{$page}}</button></a></div>
+                        @endif
+                    @endfor
+                    @if ($next_page<=$total_page)
+                        <div class="page-surf"><a href="/articles/{{$search}}/page/{{$next_page}}"><button>>> </button></a></div>
+                    @endif
+                @else  
+                    @if ($current_page < 4)
+                        @if ($prev_page > 0)
+                            <div class="page-surf"><a href="/articles/{{$search}}/page/{{$prev_page}}"><button><< </button></a></div>
+                        @endif
+                        @for ($page = 1;$page<= 4;$page++)
+                            @if ($current_page == $page)
+                            <div class="page-white">{{$page}}</div>
+                            @else
+                            <div class="page"><a href="/articles/{{$search}}/page/{{$page}}"><button>{{$page}}</button></a></div>
+                            @endif
+                        @endfor
+                        <span> ...</span>
+                        <div class="page"><a href="/articles/{{$search}}/page/{{$total_page-1}}"><button>{{$total_page-1}}</button></a></div>
+                        <div class="page"><a href="/articles/{{$search}}/page/{{$total_page}}"><button>{{$total_page}}</button></a></div>
+                        <div class="page-surf"><a href="/articles/{{$search}}/page/{{$next_page}}"><button>>> </button></a></div>
+                    @else
+                        <div class="page-surf"><a href="/articles/{{$search}}/page/{{$prev_page}}"><button><< </button></a></div>
+                        <div class="page"><a href="/articles/{{$search}}/page/1"><button>1</button></a></div>
+                        <span> ...</span>
+                        <div class="page"><a href="/articles/{{$search}}/page/{{$current_page-1}}"><button>{{$current_page-1}}</button></a></div>
+                        <div class="page-white">{{$current_page}}</div>
+                        @if($current_page+1<$total_page)
+                            <div class="page"><a href="/articles/{{$search}}/page/{{$current_page+1}}"><button>{{$current_page+1}}</button></a></div>
+                        @endif
+                        @if($current_page<$total_page-2)
+                        <span> ...</span>
+                        @endif
+                        @if($current_page<$total_page)
+                            <div class="page"><a href="/articles/{{$search}}/page/{{$total_page}}"><button>{{$total_page}}</button></a></div>
+                        @endif
+                        @if($current_page<$total_page)
+                            <div class="page-surf"><a href="/articles/{{$search}}/page/{{$next_page}}"><button>>> </button></a></div>
+                        @endif
+                    @endif
                 @endif
             @endif
         </div>

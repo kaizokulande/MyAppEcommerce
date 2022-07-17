@@ -2,10 +2,6 @@
 
     <div class="shop_products">
         <h2>設定</h2>
-        <div class="loader" role="status" area-hidden="true" style="display: none;">
-            <img src="{{ asset('/images/load/ico-loading.gif') }}">
-            <span class="sr-only">loading...</span>
-        </div>
         <div class="setting">
             <div class="grid-content">
                 <div class="grid-item"><span>Shop name:</span></div>

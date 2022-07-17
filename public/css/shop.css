@@ -193,11 +193,12 @@ body {
   text-align: center;
 }
 .product-img{
-  width: 255px;
-  height: 255px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #e9e3e3;
 }
 .productinfo img{
-  width: 255px;
+  width: 178px;
 }
 .text-center{
   text-align: center;

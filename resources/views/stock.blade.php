@@ -4,13 +4,37 @@
                 <div class="side">
                     <div class="side-nav">
                         <ul>
-                            <li><a href="/solded">Solded articles</a></li>
-                            <li><a href="/purchased">Purchased articles</a></li>
+                            <li>
+                                <div class="dashboard-surf active-surf">
+                                    <div class="dashboard-surf-icon">
+                                        <span><i class="fas fa-box surf-icon v-btn" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div class="dashboard-surf-txt v-btn"><span>ストック</span></div>
+                                <div>
+                            </li>
+                            <li>
+                                <a href="/solded">
+                                    <div class="dashboard-surf">
+                                        <div class="dashboard-surf-icon">
+                                            <span><i class="fas fa-box-open surf-icon v-btn" aria-hidden="true"></i></span>
+                                        </div>
+                                    <div class="dashboard-surf-txt v-btn"><span>売られた商品</span></div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/purchased">
+                                    <div class="dashboard-surf">
+                                        <div class="dashboard-surf-icon">
+                                            <span><i class="fas fa-inbox surf-icon v-btn" aria-hidden="true"></i></span>
+                                        </div>
+                                    <div class="dashboard-surf-txt v-btn"><span>買った商品</span></div>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 <div class="stock">
-                    <h2>Stock</h2>
+                    <h2>ストック</h2>
                     <div class="loader" role="status" area-hidden="true" style="display: none;">
                         <img src="{{ asset('/images/load/ico-loading.gif') }}">
                         <span class="sr-only">loading...</span>
@@ -56,18 +80,55 @@
                         </table><br/>
                         <div class="page-list">
                             @if ($total_page>1)
-                                @if ($prev_page > 0)
-                                    <div class="page-surf"><a href="/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
-                                @endif
-                                @for ($page = 1;$page<=$total_page;$page++)
-                                    @if ($current_page == $page)
-                                    <div class="page-white">{{$page}}</div>
-                                    @else
-                                    <div class="page"><a href="/stock/{{$page}}/{{$order}}/{{$col_name}}"><button>{{$page}}</button></a></div>
+                                @if ($total_page < 6)
+                                    @if ($prev_page > 0)
+                                        <div class="page-surf"><a href="/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
                                     @endif
-                                @endfor
-                                @if ($next_page<=$total_page)
-                                    <div class="page-surf"><a href="/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                    @for ($page = 1;$page<=$total_page;$page++)
+                                        @if ($current_page == $page)
+                                        <div class="page-white">{{$page}}</div>
+                                        @else
+                                        <div class="page"><a href="/stock/{{$page}}/{{$order}}/{{$col_name}}"><button>{{$page}}</button></a></div>
+                                        @endif
+                                    @endfor
+                                    @if ($next_page<=$total_page)
+                                        <div class="page-surf"><a href="/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                    @endif
+                                @else  
+                                    @if ($current_page < 4)
+                                        @if ($prev_page > 0)
+                                            <div class="page-surf"><a href="/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
+                                        @endif
+                                        @for ($page = 1;$page<= 4;$page++)
+                                            @if ($current_page == $page)
+                                            <div class="page-white">{{$page}}</div>
+                                            @else
+                                            <div class="page"><a href="/stock/{{$page}}/{{$order}}/{{$col_name}}"><button>{{$page}}</button></a></div>
+                                            @endif
+                                        @endfor
+                                        <span> ...</span>
+                                        <div class="page"><a href="/stock/{{$total_page-1}}/{{$order}}/{{$col_name}}"><button>{{$total_page-1}}</button></a></div>
+                                        <div class="page"><a href="/stock/{{$total_page}}/{{$order}}/{{$col_name}}"><button>{{$total_page}}</button></a></div>
+                                        <div class="page-surf"><a href="/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                    @else
+                                        <div class="page-surf"><a href="/stock/{{$prev_page}}/{{$order}}/{{$col_name}}"><button><< </button></a></div>
+                                        <div class="page"><a href="/stock/1/{{$order}}/{{$col_name}}"><button>1</button></a></div>
+                                        <span> ...</span>
+                                        <div class="page"><a href="/stock/{{$current_page-1}}/{{$order}}/{{$col_name}}"><button>{{$current_page-1}}</button></a></div>
+                                        <div class="page-white">{{$current_page}}</div>
+                                        @if($current_page+1<$total_page)
+                                            <div class="page"><a href="/stock/{{$current_page+1}}/{{$order}}/{{$col_name}}"><button>{{$current_page+1}}</button></a></div>
+                                        @endif
+                                        @if($current_page<$total_page-2)
+                                        <span> ...</span>
+                                        @endif
+                                        @if($current_page<$total_page)
+                                            <div class="page"><a href="/stock/{{$total_page}}/{{$order}}/{{$col_name}}"><button>{{$total_page}}</button></a></div>
+                                        @endif
+                                        @if($current_page<$total_page)
+                                            <div class="page-surf"><a href="/stock/{{$next_page}}/{{$order}}/{{$col_name}}"><button>>> </button></a></div>
+                                        @endif
+                                    @endif
                                 @endif
                             @endif
                         </div>

@@ -272,10 +272,8 @@ $(function(){
 /* update quantity */
 $(function(){
     $(document).on('click','.minus',function(e){
-        var stock_height = document.querySelector('.stock').clientHeight;
-        var stock_width = document.querySelector('.stock').clientWidth;
         e.preventDefault();
-        showLoader(stock_height-50,stock_width);
+        showLoader();
         var a = $(this);
         var input = a.parents('td').children('input').val();
         var link = a.attr('href')+"&quantity="+input;
@@ -307,7 +305,7 @@ $(function(){
         var stock_height = document.querySelector('.stock').clientHeight;
         var stock_width = document.querySelector('.stock').clientWidth;
         e.preventDefault();
-        showLoader(stock_height-50,stock_width);
+        showLoader();
         var a = $(this);
         var input = a.parents('td').children('input').val();
         var link = a.attr('href')+"&quantity="+input;
@@ -421,10 +419,8 @@ $(function(){
 /* /navbar */
 
 /* loader */
-function showLoader(height,width){
+function showLoader(){
     const loader = $('.loader');
-    loader.css({"width":width});
-    loader.css({"height":height});
     loader.addClass('loading');
     if(loader == null){ return }
     loader[0].style.display='block';
@@ -433,20 +429,6 @@ function showLoader(height,width){
 function hideLoader(){
     $('.loader').remove('loading');
     const loader = $('.loader');
-    if(loader == null){ return }
-    loader.attr('aria-hidden','true');
-    loader[0].style.display='none';
-}(jQuery)
-function showLoadershop(loader,height,width){
-    loader.css({"width":width});
-    loader.css({"height":height});
-    loader.addClass('loading');
-    if(loader == null){ return }
-    loader[0].style.display='block';
-    loader.attr('aria-hidden','false');
-}(jQuery)
-function hideLoadershop(loader){
-    loader.remove('loading');
     if(loader == null){ return }
     loader.attr('aria-hidden','true');
     loader[0].style.display='none';
@@ -471,10 +453,8 @@ $(function(){
 /* add_article_cart */
 $(function(){
     $(document).on('click','#add',function(e){
-        var products_height = document.querySelector('.content').clientHeight;
-        var products_width = document.querySelector('.content').clientWidth;
         e.preventDefault();
-        showLoader(products_height,products_width);
+        showLoader();
         var url=$(this).attr('href');
         $.ajax({
             url:url,
@@ -499,11 +479,8 @@ $(function(){
 });
 $(function(){
     $(document).on('click','#add-shop',function(e){
-        var products_height = document.querySelector('.shop_products').clientHeight;
-        var products_width = document.querySelector('.shop_products').clientWidth;
         e.preventDefault();
-        var loader = $('.loader-shop');
-        showLoadershop(loader,products_height,products_width);
+        showLoader();
         var url=$(this).attr('href');
         $.ajax({
             url:url,
@@ -521,7 +498,7 @@ $(function(){
                     var cart_error = $('.cart-error');
                     cart_error[0].style.display='block';
                 }
-                hideLoadershop(loader);
+                hideLoader();
             }
         })
     });
@@ -761,7 +738,7 @@ function addbreak(){
     price = document.getElementById("art_price");
     desc = document.getElementById("desc");
     text = document.getElementById("description").value;
-    new_price = price.value.replace(",","");
+    new_price = price.value.replaceAll(",","");
     text = text.replace(/   /g,"[sp][sp]");
     text = text.replace(/\n/g,"[nl]");
     document.getElementById("art_price").value = new_price;

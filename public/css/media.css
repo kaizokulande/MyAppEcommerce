@@ -57,9 +57,9 @@
         display: block;
     }
     .wrap-buttons{
-        margin-left: 10px;
+        margin-left: 0;
         margin-top: 10px;
-        display: flex;
+        justify-content: space-between;
     }
     .navbar-button{
         margin-top: 5px;
@@ -76,27 +76,7 @@
     .dropdown {
         margin-left: -50px;
     }
-    .side-nav{
-        float: none;
-        position: relative;
-        background-color: #fff;
-        border-radius: 5px;
-    }
-    .side-nav ul li{
-        display: inline;
-        width:100%;
-        margin-bottom: 10px;
-        cursor: pointer;
-    }
-    .side-nav ul li a{
-        color: var(--button-color);
-        text-decoration: underline;
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-    .side-nav ul li:hover{
-        background: var(--button-hover);
-    }
+    
 
     /* /nav*/
     .p-item{
@@ -111,11 +91,8 @@
     .price{
         font-size: 1.00rem;
     }
-    .v-btn{
-        display:none;
-    }
     .products-wrap{
-        justify-content: space-between;
+        justify-content: center;
     }
     .u-product-title-link{
         font-size: 20px;
@@ -127,31 +104,10 @@
         width: 85%;
         min-height: 650px;
         text-align: center;
-        float: left;
     }
-    .surf-left{
-        float: left;
-        margin-left: 0;
-        height: 50px;
+    .product{
+        width: 235px;
     }
-    .surf-left span{
-        display: none;
-    }
-    .surf-right span{
-        display: none;
-    }
-    .surf-right{
-        margin-right: 0;
-        height: 50px;
-        float: left;
-    }
-    .surf-button{
-        width: 30px;
-    }
-    .surf-button button{
-        width: 30px;
-    }
-
     /* .close{
         display: block;
         margin-left: 200px;
@@ -530,7 +486,7 @@
         font-size: 10px;
     }
     .tab td{
-        font-size: 10px;
+        font-size: 13px;
     }
     .tab th:nth-child(4){
         display: none;
@@ -543,6 +499,14 @@
     }
     #sld-table .tab td:nth-child(5){
         display: none;
+    }
+    .minus button{
+        width:30px;
+        height:30px;
+    }
+    .plus button{
+        width:30px;
+        height:30px;
     }
     /* /tables */
     /* shop setting */
@@ -624,6 +588,29 @@
         height:100px;
     }
     /* /cm modal*/
+    .user>div{
+        display: block;
+    }
+    .user-image{
+        width: 80px;
+    }
+    .user-image img{
+        width: 26px;
+        height: 28px;
+    }
+    .online-stat{
+        margin-left: 40px;
+    }
+    .user-name{
+        margin-top: -4px;
+        margin-left: -2px;
+    }
+    .content{
+        text-align: center;
+    }
+    .content > div{
+        display: block;
+    }
     
 /* /cm */
 
@@ -848,6 +835,15 @@
         width: 200px;
         height: 50px;
     } */
+    .page{
+        margin-left: 2px;
+    }
+    .page-white{
+        margin-left: 2px;
+    }
+    .page-surf{
+        margin-left: 2px;
+    }
     @media screen and (max-width: 550px){
         .m-b-header{
             display: none !important;
@@ -866,13 +862,16 @@
             border: none;
             min-height: auto;
             width: 100%;
+            padding-left: 0;
         }
         #quantity{
-            width: 30px;
+            width: 60px;
+            height: 26px;
+            margin-top: 5px;
         }
         .tab-delete{
-            width: 20px;
-            height: 20px;
+            width:30px;
+            height:30px;
         }
             /* cart */
         .cart-card{
@@ -880,13 +879,13 @@
             margin-left: 10px;
         }
         .cart-image{
-            width:100px;
+            width:135px;
             height:100px;
             margin-left: 0;
         }
         .cart-art-desc > div{
-            width:100px;
-            margin-top: 10px;
+            width:150px;
+            margin-top: 0;
         }
         /* sell_article */
         .counter_sell{
@@ -917,7 +916,6 @@
             width: 80%;
             min-height: 650px;
             text-align: center;
-            float: left;
         }
         .surf-left{
             float: left;
@@ -1085,6 +1083,35 @@
         }
         /* /cm modal*/
         /* /cm */
-        
+        .product{
+            width:80%;
+        }
+        .self_article{
+            margin-left: 230px;
+        }
+        .side-nav{
+            float: none;
+            position: relative;
+            background-color: #fff;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .side-nav ul li{
+            display: inline-block;
+            width:30%;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .side-nav ul li a{
+            color: var(--button-color);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .side-nav ul li:hover{
+            background: var(--button-hover);
+        }
+        .cart_danger{
+            width:100%;
+        }
     }
 }

@@ -42,8 +42,7 @@ class SubscriptionController extends Controller
                 return redirect()->route('plans_subscribed')->with('success','プレミアムになりました。');
             }catch(\Throwable $e){
                 DB::rollback();
-                /* 'エラーがありました！！' */
-                return redirect()->route('plans')->with('error_subs',$e);
+                return redirect()->route('plans')->with('error_subs','エラーがありました！！');
             }
         }else{
             return redirect()->route('plans')->with('error_log','Please login first Or Register if no account');

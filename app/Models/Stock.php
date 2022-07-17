@@ -109,21 +109,59 @@ class Stock extends Model
             <div class="page-list">';
             $prev_page = $current_page-1;
 			$next_page = $current_page+1;
-                if ($total_page>1){
-                    if($prev_page > 0){
-                        $output .='<div class="page-surf"><a href="/stock/'.$prev_page.'/'.$order.'/'.$request_col_name.'"><button><< </button></a></div>';
+                
+            if ($total_page>1){
+                if ($total_page < 6){
+                    if ($prev_page > 0){
+                        $output .='<div class="page-surf"><a href="/stock/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>';
                     }
-                    for($page = 1;$page<=$total_page;$page++){
-                        if($current_page == $page){
+                    for ($page = 1;$page<=$total_page;$page++){
+                        if ($current_page == $page){
                             $output .='<div class="page-white">'.$page.'</div>';
                         }else{
-                            $output .='<div class="page"><a href="/stock/'.$page.'/'.$order.'/'.$request_col_name.'"><button>'.$page.' </button></a></div>';
+                            $output .='<div class="page"><a href="/stock/'.$page.'/'.$order.'/'.$col_name.'"><button>'.$page.'</button></a></div>';
                         }
                     }
-                    if($next_page<=$total_page){
-                        $output .='<div class="page-surf"><a href="/stock/'.$next_page.'/'.$order.'/'.$request_col_name.'"><button>>> </button></a></div>';
+                    if ($next_page<=$total_page){
+                        $output .='<div class="page-surf"><a href="/stock/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                    }
+                }else{
+                    if ($current_page < 4){
+                        if ($prev_page > 0){
+                            $output .='<div class="page-surf"><a href="/stock/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>';
+                        }
+                        for ($page = 1;$page<= 4;$page++){
+                            if ($current_page == $page){
+                                $output .='<div class="page-white">'.$page.'</div>';
+                            }else{
+                                $output .='<div class="page"><a href="/stock/'.$page.'/'.$order.'/'.$col_name.'"><button>'.$page.'</button></a></div>';
+                            }
+                        }
+                        $output .='<span> ...</span>
+                        <div class="page"><a href="/stock/'.($total_page-1).'/'.$order.'/'.$col_name.'"><button>'.($total_page-1).'</button></a></div>
+                        <div class="page"><a href="/stock/'.$total_page.'/'.$order.'/'.$col_name.'"><button>'.$total_page.'</button></a></div>
+                        <div class="page-surf"><a href="/stock/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                    }else{
+                        $output .='<div class="page-surf"><a href="/stock/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>
+                        <div class="page"><a href="/stock/1/'.$order.'/'.$col_name.'"><button>1</button></a></div>
+                        <span> ...</span>
+                        <div class="page"><a href="/stock/'.($current_page-1).'/'.$order.'/'.$col_name.'"><button>'.($current_page-1).'</button></a></div>
+                        <div class="page-white">'.$current_page.'</div>';
+                        if($current_page+1<$total_page){
+                            $output .='<div class="page"><a href="/stock/'.($current_page+1).'/'.$order.'/'.$col_name.'"><button>'.($current_page+1).'</button></a></div>';
+                        }
+                        if($current_page<$total_page-2){
+                            $output .='<span> ...</span>';
+                        }
+                        if($current_page<$total_page){
+                            $output .='<div class="page"><a href="/stock/'.$total_page.'/'.$order.'/'.$col_name.'"><button>'.$total_page.'</button></a></div>';
+                        }
+                        if($current_page<$total_page){
+                            $output .='<div class="page-surf"><a href="/stock/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                        }
                     }
                 }
+            }
             $output .='</div>';
         return $output;
     }
@@ -157,7 +195,7 @@ class Stock extends Model
         foreach($articles as $art){
             $output .='
             <tr>
-                <td>'.$art->purchase_dates.'</td>
+                <td>'.strftime('%Y %B %d %A', strtotime($art->purchase_dates)).'</td>
                 <td><img class="img-cart" src="'.asset($art->small_images).'"></td>
                 <td>'.$art->article_name.'</td>
                 <td>'.$art->sizes.'</td>
@@ -176,21 +214,56 @@ class Stock extends Model
             <div class="page-list">';
             $prev_page = $current_page-1;
 			$next_page = $current_page+1;
-                if ($total_page>1){
-                    if($prev_page > 0){
-                        $output .='<div class="page-surf"><a href="/purchased/'.$prev_page.'/'.$order.'/'.$request_col_name.'"><button><< </button></a></div>';
-                    }
-                    for($page = 1;$page<=$total_page;$page++){
-                        if($current_page == $page){
-                            $output .='<div class="page-white">'.$page.'</div>';
-                        }else{
-                            $output .='<div class="page"><a href="/purchased/'.$page.'/'.$order.'/'.$request_col_name.'"><button>'.$page.' </button></a></div>';
-                        }
-                    }
-                    if($next_page<=$total_page){
-                        $output .='<div class="page-surf"><a href="/purchased/'.$next_page.'/'.$order.'/'.$request_col_name.'"><button>>> </button></a></div>';
+            if ($total_page < 6){
+                if ($prev_page > 0){
+                    $output .='<div class="page-surf"><a href="/purchased/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>';
+                }
+                for ($page = 1;$page<=$total_page;$page++){
+                    if ($current_page == $page){
+                        $output .='<div class="page-white">'.$page.'</div>';
+                    }else{
+                        $output .='<div class="page"><a href="/purchased/'.$page.'/'.$order.'/'.$col_name.'"><button>'.$page.'</button></a></div>';
                     }
                 }
+                if ($next_page<=$total_page){
+                    $output .='<div class="page-surf"><a href="/purchased/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                }
+            }else{
+                if ($current_page < 4){
+                    if ($prev_page > 0){
+                        $output .='<div class="page-surf"><a href="/purchased/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>';
+                    }
+                    for ($page = 1;$page<= 4;$page++){
+                        if ($current_page == $page){
+                            $output .='<div class="page-white">'.$page.'</div>';
+                        }else{
+                            $output .='<div class="page"><a href="/purchased/'.$page.'/'.$order.'/'.$col_name.'"><button>'.$page.'</button></a></div>';
+                        }
+                    }
+                    $output .='<span> ...</span>
+                    <div class="page"><a href="/purchased/'.($total_page-1).'/'.$order.'/'.$col_name.'"><button>'.($total_page-1).'</button></a></div>
+                    <div class="page"><a href="/purchased/'.$total_page.'/'.$order.'/'.$col_name.'"><button>'.$total_page.'</button></a></div>
+                    <div class="page-surf"><a href="/purchased/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                }else{
+                    $output .='<div class="page-surf"><a href="/purchased/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>
+                    <div class="page"><a href="/purchased/1/'.$order.'/'.$col_name.'"><button>1</button></a></div>
+                    <span> ...</span>
+                    <div class="page"><a href="/purchased/'.($current_page-1).'/'.$order.'/'.$col_name.'"><button>'.($current_page-1).'</button></a></div>
+                    <div class="page-white">'.$current_page.'</div>';
+                    if($current_page+1<$total_page){
+                        $output .='<div class="page"><a href="/purchased/'.($current_page+1).'/'.$order.'/'.$col_name.'"><button>'.($current_page+1).'</button></a></div>';
+                    }
+                    if($current_page<$total_page-2){
+                        $output .='<span> ...</span>';
+                    }
+                    if($current_page<$total_page){
+                        $output .='<div class="page"><a href="/purchased/'.$total_page.'/'.$order.'/'.$col_name.'"><button>'.$total_page.'</button></a></div>';
+                    }
+                    if($current_page<$total_page){
+                        $output .='<div class="page-surf"><a href="/purchased/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                    }
+                }
+            }
             $output .='</div>';
         return $output;
     }
@@ -224,7 +297,7 @@ class Stock extends Model
         foreach($articles as $art){
             $output .='
             <tr>
-                <td>'.$art->dates.'</td>
+                <td>'.strftime('%Y %B %d %A', strtotime($art->dates)).'</td>
                 <td><img class="img-cart" src="'.asset($art->small_images).'"></td>
                 <td>'.$art->article_name.'</td>
                 <td>'.$art->sizes.'</td>
@@ -243,21 +316,56 @@ class Stock extends Model
             <div class="page-list">';
             $prev_page = $current_page-1;
 			$next_page = $current_page+1;
-                if ($total_page>1){
-                    if($prev_page > 0){
-                        $output .='<div class="page-surf"><a href="/solded/'.$prev_page.'/'.$order.'/'.$request_col_name.'"><button><< </button></a></div>';
-                    }
-                    for($page = 1;$page<=$total_page;$page++){
-                        if($current_page == $page){
-                            $output .='<div class="page-white">'.$page.'</div>';
-                        }else{
-                            $output .='<div class="page"><a href="/solded/'.$page.'/'.$order.'/'.$request_col_name.'"><button>'.$page.' </button></a></div>';
-                        }
-                    }
-                    if($next_page<=$total_page){
-                        $output .='<div class="page-surf"><a href="/solded/'.$next_page.'/'.$order.'/'.$request_col_name.'"><button>>> </button></a></div>';
+            if ($total_page < 6){
+                if ($prev_page > 0){
+                    $output .='<div class="page-surf"><a href="/solded/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>';
+                }
+                for ($page = 1;$page<=$total_page;$page++){
+                    if ($current_page == $page){
+                        $output .='<div class="page-white">'.$page.'</div>';
+                    }else{
+                        $output .='<div class="page"><a href="/solded/'.$page.'/'.$order.'/'.$col_name.'"><button>'.$page.'</button></a></div>';
                     }
                 }
+                if ($next_page<=$total_page){
+                    $output .='<div class="page-surf"><a href="/solded/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                }
+            }else{
+                if ($current_page < 4){
+                    if ($prev_page > 0){
+                        $output .='<div class="page-surf"><a href="/solded/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>';
+                    }
+                    for ($page = 1;$page<= 4;$page++){
+                        if ($current_page == $page){
+                            $output .='<div class="page-white">'.$page.'</div>';
+                        }else{
+                            $output .='<div class="page"><a href="/solded/'.$page.'/'.$order.'/'.$col_name.'"><button>'.$page.'</button></a></div>';
+                        }
+                    }
+                    $output .='<span> ...</span>
+                    <div class="page"><a href="/solded/'.($total_page-1).'/'.$order.'/'.$col_name.'"><button>'.($total_page-1).'</button></a></div>
+                    <div class="page"><a href="/solded/'.$total_page.'/'.$order.'/'.$col_name.'"><button>'.$total_page.'</button></a></div>
+                    <div class="page-surf"><a href="/solded/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                }else{
+                    $output .='<div class="page-surf"><a href="/solded/'.$prev_page.'/'.$order.'/'.$col_name.'"><button><< </button></a></div>
+                    <div class="page"><a href="/solded/1/'.$order.'/'.$col_name.'"><button>1</button></a></div>
+                    <span> ...</span>
+                    <div class="page"><a href="/solded/'.($current_page-1).'/'.$order.'/'.$col_name.'"><button>'.($current_page-1).'</button></a></div>
+                    <div class="page-white">'.$current_page.'</div>';
+                    if($current_page+1<$total_page){
+                        $output .='<div class="page"><a href="/solded/'.($current_page+1).'/'.$order.'/'.$col_name.'"><button>'.($current_page+1).'</button></a></div>';
+                    }
+                    if($current_page<$total_page-2){
+                        $output .='<span> ...</span>';
+                    }
+                    if($current_page<$total_page){
+                        $output .='<div class="page"><a href="/solded/'.$total_page.'/'.$order.'/'.$col_name.'"><button>'.$total_page.'</button></a></div>';
+                    }
+                    if($current_page<$total_page){
+                        $output .='<div class="page-surf"><a href="/solded/'.$next_page.'/'.$order.'/'.$col_name.'"><button>>> </button></a></div>';
+                    }
+                }
+            }
             $output .='</div>';
         return $output;
     }

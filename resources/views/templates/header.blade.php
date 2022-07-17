@@ -6,7 +6,7 @@
     $categories = $bs_cont::getCategories();
     $user = Auth::user();
 @endphp
-<!DOCTYPE html!>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <title>Kaibai</title>
@@ -124,4 +124,3 @@
             </div>
         </div>
     </div>
-    <!DOCTYPE html>

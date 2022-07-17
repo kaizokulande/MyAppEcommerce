@@ -29,22 +29,26 @@ class Setting_controller extends Base_controller
     }
     function change_name(Request $request){
         if (Gate::allows('isAdmin')){
-            $shop_ses = session()->get('shop_ses');
-            $validation = Validator::make($request->all(), [
-                'shop_name' => 'required | unique:shops,shop_name'
-            ]);
-            if($validation->fails()){
-                $name_error = $validation->errors()->first('shop_name');
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('name_error',$name_error);
+            if(Gate::allows('isSubscribedShop')){
+                $shop_ses = session()->get('shop_ses');
+                $validation = Validator::make($request->all(), [
+                    'shop_name' => 'required | unique:shops,shop_name'
+                ]);
+                if($validation->fails()){
+                    $name_error = $validation->errors()->first('shop_name');
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('name_error',$name_error);
+                }else{
+                    $shop = Shop::get_shop($shop_ses['shop_name']);
+                    Setting::shop_old_info($shop);
+                    Setting::update_shop($shop->id_shop,"shop_name",$request->shop_name);
+                    $new_shop = Shop::get_shop($request->shop_name);
+                    session()->pull('shop_ses');
+                    $shop_ses = array('id_shop'=>$new_shop->id_shop,'shop_name'=>$request->shop_name);
+                    $request->session()->put('shop_ses',$shop_ses);
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('name_success','ショップの名前を変えることが出来ました。');
+                }
             }else{
-                $shop = Shop::get_shop($shop_ses['shop_name']);
-                Setting::shop_old_info($shop);
-                Setting::update_shop($shop->id_shop,"shop_name",$request->shop_name);
-                $new_shop = Shop::get_shop($request->shop_name);
-                session()->pull('shop_ses');
-                $shop_ses = array('id_shop'=>$new_shop->id_shop,'shop_name'=>$request->shop_name);
-                $request->session()->put('shop_ses',$shop_ses);
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('name_success','ショップの名前を変えることが出来ました。');
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
             }
         }else{
             return redirect("/".$shop_ses['shop_name']);
@@ -52,21 +56,25 @@ class Setting_controller extends Base_controller
     }
     function change_email(Request $request){
         if (Gate::allows('isAdmin')){
-            $shop_ses = session()->get('shop_ses');
-            $validation = Validator::make($request->all(), [
-                'email' => 'required | email | confirmed | unique:shops,shop_email',
-                'email_confirmation' => 'required | email'
-            ]);
-            if($validation->fails()){
-                    $email_error =  $validation->errors()->first('email');
-                    $cemail_error = $validation->errors()->first('email_confirmation');
-                    return redirect("/".$shop_ses['shop_name']."/setting")->with('email_error',$email_error . $cemail_error);
+            if(Gate::allows('isSubscribedShop')){
+                $shop_ses = session()->get('shop_ses');
+                $validation = Validator::make($request->all(), [
+                    'email' => 'required | email | confirmed | unique:shops,shop_email',
+                    'email_confirmation' => 'required | email'
+                ]);
+                if($validation->fails()){
+                        $email_error =  $validation->errors()->first('email');
+                        $cemail_error = $validation->errors()->first('email_confirmation');
+                        return redirect("/".$shop_ses['shop_name']."/setting")->with('email_error',$email_error . $cemail_error);
+                }else{
+                    $t_email = trim($request->email);
+                    $shop = Shop::get_shop($shop_ses['shop_name']);
+                    Setting::shop_old_info($shop);
+                    Setting::update_shop($shop->id_shop,"shop_email",$t_email);
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('email_success','メールが変更されました。');
+                }
             }else{
-                $t_email = trim($request->email);
-                $shop = Shop::get_shop($shop_ses['shop_name']);
-                Setting::shop_old_info($shop);
-                Setting::update_shop($shop->id_shop,"shop_email",$t_email);
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('email_success','メールが変更されました。');
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
             }
         }else{
             return redirect("/".$shop_ses['shop_name']);
@@ -74,24 +82,28 @@ class Setting_controller extends Base_controller
     }
     function change_phone(Request $request){
         if (Gate::allows('isAdmin')){
-            $shop_ses = session()->get('shop_ses');
-            $validation = Validator::make($request->all(), [
-                'shop_phone' => 'required | max:19'
-            ]);
-            $phone_number_validation_regex = "^\d{2}(?:-\d{4}-\d{4}|\d{8}|\d-\d{3,4}-\d{4})$^";
-            $preg = preg_match($phone_number_validation_regex, $request->shop_phone);
-            if($preg == 0){
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('phone_error','電話番号は正しくありませんでした。');
-            }else{
-                if($validation->fails()){
-                    $phone_error = $validation->errors()->first('shop_phone');
-                    return redirect("/".$shop_ses['shop_name']."/setting")->with('phone_error',$phone_error);
+            if(Gate::allows('isSubscribedShop')){
+                $shop_ses = session()->get('shop_ses');
+                $validation = Validator::make($request->all(), [
+                    'shop_phone' => 'required | max:19'
+                ]);
+                $phone_number_validation_regex = "^\d{2}(?:-\d{4}-\d{4}|\d{8}|\d-\d{3,4}-\d{4})$^";
+                $preg = preg_match($phone_number_validation_regex, $request->shop_phone);
+                if($preg == 0){
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('phone_error','電話番号は正しくありませんでした。');
                 }else{
-                    $shop = Shop::get_shop($shop_ses['shop_name']);
-                    Setting::shop_old_info($shop);
-                    Setting::update_shop($shop->id_shop,"phone_number",$request->shop_phone);
-                    return redirect("/".$shop_ses['shop_name']."/setting")->with('phone_success','電話番号が変更されました。');
+                    if($validation->fails()){
+                        $phone_error = $validation->errors()->first('shop_phone');
+                        return redirect("/".$shop_ses['shop_name']."/setting")->with('phone_error',$phone_error);
+                    }else{
+                        $shop = Shop::get_shop($shop_ses['shop_name']);
+                        Setting::shop_old_info($shop);
+                        Setting::update_shop($shop->id_shop,"phone_number",$request->shop_phone);
+                        return redirect("/".$shop_ses['shop_name']."/setting")->with('phone_success','電話番号が変更されました。');
+                    }
                 }
+            }else{
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
             }
         }else{
             return redirect("/".$shop_ses['shop_name']);
@@ -99,18 +111,22 @@ class Setting_controller extends Base_controller
     }
     function change_web(Request $request){
         if (Gate::allows('isAdmin')){
-            $shop_ses = session()->get('shop_ses');
-            $validation = Validator::make($request->all(), [
-                'new_web' => 'required'
-            ]);
-            if($validation->fails()){
-                $web_error = $validation->errors()->first('new_web');
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('web_error',$web_error);
+            if(Gate::allows('isSubscribedShop')){
+                $shop_ses = session()->get('shop_ses');
+                $validation = Validator::make($request->all(), [
+                    'new_web' => 'required'
+                ]);
+                if($validation->fails()){
+                    $web_error = $validation->errors()->first('new_web');
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('web_error',$web_error);
+                }else{
+                    $shop = Shop::get_shop($shop_ses['shop_name']);
+                    Setting::shop_old_info($shop);
+                    Setting::update_shop($shop->id_shop,"shop_site",$request->new_web);
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('web_success','ウェブサイトが変更されました。');
+                }
             }else{
-                $shop = Shop::get_shop($shop_ses['shop_name']);
-                Setting::shop_old_info($shop);
-                Setting::update_shop($shop->id_shop,"shop_site",$request->new_web);
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('web_success','ウェブサイトが変更されました。');
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
             }
         }else{
             return redirect("/".$shop_ses['shop_name']);
@@ -122,27 +138,35 @@ class Setting_controller extends Base_controller
         echo json_encode($data);
     }
     function add_admin(Request $request){
+        $shop_ses = session()->get('shop_ses');
         if (Gate::allows('isAdmin')){
-            $shop_ses = session()->get('shop_ses');
-            $validation = Validator::make($request->all(), [
-                'email' => [
-                    'required',
-                    'email',
-                    'exists:users,email',
-                    Rule::unique('user_admins')->where(function ($query) {
-                        $shop_ses = session()->get('shop_ses');
-                        return $query->where('id_shop','=', $shop_ses['id_shop']);
-                    })
-                ],
-            ]);
-            if($validation->fails()){
-                $add_error = $validation->errors()->first('email');
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('add_error','email invalid or email not used in kaibai or this email is already admin');;
+            if(Gate::allows('isSubscribedShop')){
+                if(Gate::allows('canAddAdmins')){
+                    $validation = Validator::make($request->all(), [
+                        'email' => [
+                            'required',
+                            'email',
+                            'exists:users,email',
+                            Rule::unique('user_admins')->where(function ($query) {
+                                $shop_ses = session()->get('shop_ses');
+                                return $query->where('id_shop','=', $shop_ses['id_shop']);
+                            })
+                        ],
+                    ]);
+                    if($validation->fails()){
+                        $add_error = $validation->errors()->first('email');
+                        return redirect("/".$shop_ses['shop_name']."/setting")->with('add_error','このメールはもう管理者です。');
+                    }else{
+                        $shop = Shop::get_shop($shop_ses['shop_name']);
+                        $user = Setting::get_user($request->email);
+                        Setting::insert_admin($user->id,$shop->id_shop);
+                        return redirect("/".$shop_ses['shop_name']."/setting")->with('add_success','管理者を加えることができました。');
+                    }
+                }else{
+                    return redirect("/".$shop_ses['shop_name']."/setting")->with('add_error','管理者の人数のリミット以上を入れません。管理者の人数のリミット以上を入れたい時はプランをアップデートしてください！！');
+                }
             }else{
-                $shop = Shop::get_shop($shop_ses['shop_name']);
-                $user = Setting::get_user($request->email);
-                Setting::insert_admin($user->id,$shop->id_shop);
-                return redirect("/".$shop_ses['shop_name']."/setting")->with('add_success','管理者を加えることができました。');
+                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
             }
         }else{
             return redirect("/".$shop_ses['shop_name']);
@@ -158,13 +182,17 @@ class Setting_controller extends Base_controller
         }
     }
     function add_commercial(Request $request){
-        $request->validate([
-            'title' => 'max:50',
-        ]);
-        $shop_ses = session()->get('shop_ses');
-        $path = parent::cover_folders($shop_ses['shop_name']);
-        $file_path = parent::image_cm_upload($request->image,$path);
-        Setting::add_cover_cm($shop_ses['id_shop'],$request->title,$file_path);
-        echo json_encode('success');
+        if(Gate::allows('isSubscribedShop')){
+            $request->validate([
+                'title' => 'max:50',
+            ]);
+            $shop_ses = session()->get('shop_ses');
+            $path = parent::cover_folders($shop_ses['shop_name']);
+            $file_path = parent::image_cm_upload($request->image,$path);
+            Setting::add_cover_cm($shop_ses['id_shop'],$request->title,$file_path);
+            echo json_encode('success');
+        }else{
+            return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
+        }
     }
 }
