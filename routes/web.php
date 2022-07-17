@@ -10,6 +10,7 @@ use App\Http\Controllers\Shop_controller;
 use App\Http\Controllers\Shop_stock_controller;
 use App\Http\Controllers\Setting_controller;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,14 @@ Route::post('/article_upload',[Article_controller::class,'upload_article']);
 Route::post('user_register',[Users_controller::class,'user_register']);
 Route::get('/register/email_confirmation/{code}',[Users_controller::class,'confirm_email']);
 Route::post('login',[Users_controller::class,'user_login']);
+
+/* forget password */
+
+Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::get('reset_password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm']);
+Route::post('reset_password-post', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
 /* cart */
 Route::post('/add_to_cart',[Cart_controller::class,'store'])->name('add_to_cart');
 Route::get('/shoppingcart',[Cart_controller::class,'view_cart']);

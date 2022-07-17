@@ -39,7 +39,7 @@ class Users_controller extends Base_controller
         $sql = DB::insert(sprintf($sql,$user->id,$code));
         /*  /register/email_confirmation/{code} */
         Mail::to($t_email)->send(new KaibaiMail('会員登録ありがとうございました！',$req->first_name,$req->last_name,$code));
-        $success_mess = 'You have registered successfuly.';
+        $success_mess = '登録に成功しました。';
         return redirect('register')->with('success',$success_mess);
     }
     function confirm_email(Request $request){
@@ -72,7 +72,7 @@ class Users_controller extends Base_controller
             }
         }
         return back()->withErrors([
-            'error_pass' => 'your Passord or Email is not valid.',
+            'error_pass' => 'パスワードまたはメールが無効です。',
         ]);
     }
     
