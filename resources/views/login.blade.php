@@ -7,6 +7,9 @@
                     @error('error_conf_mail')
                         <span style="color:red">{{$message}}</span>
                     @enderror
+                    @if(session('login_error'))
+                        <span style="color:red">{{session('login_error')}}</span>
+                    @endif
                     @if (session('message'))
                     <span style="color:green">{{session('message')}}</span>
                     @endif

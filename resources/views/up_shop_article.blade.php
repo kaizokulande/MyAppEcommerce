@@ -4,12 +4,10 @@
             <div class="article_upload">
             <h2>商品をアップデート</h2>
                 <div class="form-group-article">
-                    <h4>informations</h4>
-                    <p>la vente d'article usee ou casse est strictement interdit</p>
                     <div class="article_image"><img id="article_img" src="{{ asset($article->small_images) }}"></div><br/>
-                    @if(session('error_log'))
+                    @if(session('error'))
                     <div class="danger">
-                    {{session('error_log')}} <a href="#">Click here</a>
+                    {{session('error')}}
                     </div><br/>
                     @endif
                     @if(session('success'))
@@ -52,7 +50,7 @@
                         <textarea id="desc" name="description"></textarea><br/>
                         <textarea placeholder="article description" value="{{ $article->descriptions }}" id="description">{{ $article->descriptions }}</textarea><br/>
                         <div class="counter_sell"><i id="number">1000</i></div><br/>
-                        <input type="submit" name="Submit" class="articlesubmit" value="ウェブサイト">
+                        <input type="submit" name="Submit" class="articlesubmit" value="アップデート">
                     </form>
                 </div>
             </div>

@@ -56,7 +56,7 @@
               <!--/product_item-->
             <div class="products-wrap">
                 <div class="products">
-                    <h3>Articles</h3>
+                    <h3>商品</h3>
                     @foreach ($articles as $art)
                     <div class="product">
 				        <div class="product-image-wrapper">
@@ -65,7 +65,7 @@
                             @endif
                             <div class="single-products">
                                 <div class="productinfo text-center">
-                                    <img src="{{ asset($art->small_images) }}" alt="" />
+                                    <img src="{{ asset($art->small_images) }}" alt=""/>
                                     <h2 class="price">{{ number_format($art->price) }}<span>¥</span></h2>
                                     <a href="/article/{{$art->id_article}}/{{$art->article_name}}"><p class="title">{{$art->article_name}}</p></a>
                                     @if(Auth::check() && $art->id == Auth::id())

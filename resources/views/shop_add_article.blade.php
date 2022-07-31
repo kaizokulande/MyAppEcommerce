@@ -1,4 +1,58 @@
+<?php
+	use Illuminate\Support\Str;
+	$user = Auth::user();
+?>
 @include('templates/shop_header')
+        <div class="left-sidebar">
+            <span id="close-nav">&times;</span>
+			<div class="shop-info">
+				<h2>ショップ情報</h2>
+				<p><span id="nav_phone">{{$shop->phone_number}}</span></p>
+				<p><span id="nav_email">{{Str::limit($shop->shop_email,32,'...')}}</span><p>
+				<p><span><a id="nav_site" href="{{$shop->shop_site}}">{{Str::limit($shop->shop_site,32,'...')}}</a></span><p>
+			</div>
+			<div class="line"></div>
+			<!-- admin -->
+			@can('isAdmin')
+			<div class="admins-section">
+				<h2>管理者</h2>
+					<div class="admins">
+						<div class="administrator">
+							<div class="admin-image">
+								<div class="online-status"></div>
+								<img src="{{ asset($user->logo_type) }}" />
+							</div>
+							<div class="admin-name">{{ $user->firstname }} {{ $user->lastname }}</div>
+						</div>
+					</div>
+					<div class="line"></div>
+						@foreach ($admins as $adm)
+						<div class="admins">
+							<div class="administrator">
+								<div class="admin-image">
+									@if (Cache::has('is_online'. $adm->id))
+										<div class="online-status"></div>
+									@else
+										<div class="lastsen"><span>{{ Carbon\Carbon::parse($adm->last_seen)->diffForHumans() }}</span></div>
+                					@endif
+									<img src="{{ asset($adm->logo_type) }}" />
+								</div>
+								<div class="admin-name">{{ $adm->firstname }} {{ $adm->lastname }}</div>
+							</div>
+						</div>
+						@endforeach
+					<!-- /admin -->
+				</div>
+			@endcan
+			<div class="shop-categorie">
+				<h2>カテゴリー</h2>
+				@foreach ($categories as $cat)
+				<ul class="cat_list">
+                	<li><a href="/shop/{{$shop->shop_name}}/categorie/{{$cat->categorie}}">{{$cat->categorie}}</a></li>
+				</ul>
+                @endforeach
+			</div>
+        </div>
         <div class="shop_products">
             <div class="article_upload">
             <h2>商品を加える</h2>

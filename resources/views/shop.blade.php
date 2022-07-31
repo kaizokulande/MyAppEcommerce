@@ -1,5 +1,58 @@
+<?php
+	use Illuminate\Support\Str;
+	$user = Auth::user();
+?>
 @include('templates/shop_header')
-    <div class="body-container">
+        <div class="left-sidebar">
+            <span id="close-nav">&times;</span>
+			<div class="shop-info">
+				<h2>ショップ情報</h2>
+				<p><span id="nav_phone">{{$shop->phone_number}}</span></p>
+				<p><span id="nav_email">{{Str::limit($shop->shop_email,32,'...')}}</span><p>
+				<p><span><a id="nav_site" href="{{$shop->shop_site}}">{{Str::limit($shop->shop_site,32,'...')}}</a></span><p>
+			</div>
+			<div class="line"></div>
+			<!-- admin -->
+			@can('isAdmin')
+			<div class="admins-section">
+				<h2>管理者</h2>
+					<div class="admins">
+						<div class="administrator">
+							<div class="admin-image">
+								<div class="online-status"></div>
+								<img src="{{ asset($user->logo_type) }}" />
+							</div>
+							<div class="admin-name">{{ $user->firstname }} {{ $user->lastname }}</div>
+						</div>
+					</div>
+					<div class="line"></div>
+						@foreach ($admins as $adm)
+						<div class="admins">
+							<div class="administrator">
+								<div class="admin-image">
+									@if (Cache::has('is_online'. $adm->id))
+										<div class="online-status"></div>
+									@else
+										<div class="lastsen"><span>{{ Carbon\Carbon::parse($adm->last_seen)->diffForHumans() }}</span></div>
+                					@endif
+									<img src="{{ asset($adm->logo_type) }}" />
+								</div>
+								<div class="admin-name">{{ $adm->firstname }} {{ $adm->lastname }}</div>
+							</div>
+						</div>
+						@endforeach
+					<!-- /admin -->
+				</div>
+			@endcan
+			<div class="shop-categorie">
+				<h2>カテゴリー</h2>
+				@foreach ($categories as $cat)
+				<ul class="cat_list">
+                	<li><a href="/shop/{{$shop->shop_name}}/categorie/{{$cat->categorie}}">{{$cat->categorie}}</a></li>
+				</ul>
+                @endforeach
+			</div>
+        </div>
         <div class="shop_products">
             <!-- modal -->
             <div id="cm_upload">
@@ -10,33 +63,32 @@
                     </div>
                     <div class="cm-body">
                         <div class="component">
-                            <div class="overlay">
-                                <div class="overlay-inner"></div>
-                            </div>
-                                <img id="image_preview" class="resize-image">
+                            <img id="image_prev" class="resize-image">
                         </div>
                         <div class="cart-description_modal">
-                            <form class="cm-form">
-                                <input type="file" class="inputfile" name="cover_pict" id="imagetemp"/>
-                                <input id="cm_title" type="text" placeholder="タイトル"/>
-                                <input class="add" id="js-crop" type="submit" class="cm_upload" value="カバー写真を変える">
+                            <form class="cm-form" method="post" action="{{ route('add_cover') }}" enctype="multipart/form-data">@csrf
+                                <input class="inputfile" type="file" name="cover_pict" id="imagetemp"/>
+                                <input id="cm_title" type="text" name="title" placeholder="タイトル"/>
+                                <input class="add" type="submit" class="cm_upload" value="カバー写真を変える">
                             </form>
                         </div>
-                    </div>
-                    <div class="m-footer">
                     </div>
                 </div>
             </div>
             <!-- /modal -->
             <div class="cover">
-                @can('isAdmin')
-                    <div class="modif-cover"><button id="add_cm" class="add img-button-color"><i class="fas fa-image"></i> カバーを変える</button></div>
-                @endcan
                 @if ($cover == 'not defined')
-                    <img class="cover-pict" src="{{ asset('/images/default-cover.png') }}">
+                <img class="cover-image" src="{{ asset('/images/default-cover.png') }}">
                 @else
-                    <img class="cover-pict" src="{{ asset($cover->big_image) }}">
+                <img class="cover-image" src="{{ asset($cover->big_image) }}">
                 @endif
+                @can('isAdmin')
+                    <div class="shop-image">
+                        <div class="modif-cover">
+                            <button id="add_cm" class="add img-button-color"><i class="fas fa-image"></i> <i class='add-txt'>カバーを変える</i></button>
+                        </div>
+                    </div>
+                @endcan
             </div>
             <h2>商品</h2>
             <div class="loader" role="status" area-hidden="true" style="display: none;">

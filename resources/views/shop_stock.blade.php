@@ -1,6 +1,37 @@
 
 @include('templates/shop_header')
-        <div class="shop_products">
+        <div class="stock-sidebar">
+        <span id="close-nav">&times;</span>
+            <ul>
+                <li>
+                    <div class="dashboard-surf active-surf">
+                        <div class="dashboard-surf-icon">
+                            <span><i class="fas fa-box surf-icon v-btn" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="dashboard-surf-txt v-btn"><span>ストック</span></div>
+                    <div>
+                </li>
+                <li>
+                    <a href="/{{$shop->shop_name}}/shop_solded">
+                        <div class="dashboard-surf">
+                            <div class="dashboard-surf-icon">
+                                <span><i class="fas fa-box-open surf-icon v-btn" aria-hidden="true"></i></span>
+                            </div>
+                        <div class="dashboard-surf-txt v-btn"><span>売られた商品</span></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/{{$shop->shop_name}}/setting">
+                        <div class="dashboard-surf">
+                            <div class="dashboard-surf-icon">
+                                <span><i class="fas fa-cog surf-icon v-btn" aria-hidden="true"></i></span>
+                            </div>
+                        <div class="dashboard-surf-txt v-btn"><span>設定</span></div>
+                    </a>
+                </li>
+            </ul>
+        </div>            
+        <div class="stock_products">
             <div class="stock">
                 <h2>ストック</h2>
                 <div class="loader" role="status" area-hidden="true" style="display: none;">
@@ -23,8 +54,8 @@
                         <!-- tr -->
                         @foreach ($articles as $art)
                             <tr>
-                                <td><a href="up_article/{{ $art->id_article }}/{{ $art->article_name }}"><img class="img-cart" src="{{ asset($art->small_images) }}"></a></td>
-                                <td><a href="up_article/{{ $art->id_article }}/{{ $art->article_name }}">{{ $art->article_name }}</a></td>
+                                <td><a href="/{{$shop->shop_name}}/up_article/{{ $art->id_article }}/{{ $art->article_name }}"><img class="img-cart" src="{{ asset($art->small_images) }}"></a></td>
+                                <td><a href="/{{$shop->shop_name}}/up_article/{{ $art->id_article }}/{{ $art->article_name }}">{{ $art->article_name }}</a></td>
                                 <td>{{ $art->sizes }}</td>
                                 <td>{{ $art->color }}</td>
                                 <td id="quantity">{{ $art->quantity }}</td>

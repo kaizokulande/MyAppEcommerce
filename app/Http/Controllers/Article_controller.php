@@ -21,6 +21,9 @@ class Article_controller extends Base_controller
                 'size' => 'required',
                 'quantity' => 'required | gte:1',
             ]);
+            if($request->color=='ありません'){
+                $request->color= '';
+            }
             $description = parent::space_nl($request->description);
             $imgfile = $request->image;
             $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();

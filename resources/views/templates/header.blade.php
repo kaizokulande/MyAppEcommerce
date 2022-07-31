@@ -106,12 +106,13 @@
                         <div class="cart-number"><span>{{Cart::count()}}</span></div>
                     @endif
                     </div>
-                    <a href="/shoppingcart"><i><img src="{{ asset('../images/icon/833314.png') }}"></i><i>カート</i></a>
-                    @if (Cart::Count()>0)
+                    <a href="#"><i><img src="{{ asset('../images/icon/833314.png') }}"></i><i>カート</i></a>
                     <div class="dropdown">
+                        <a href="/shoppingcart">カートへ</a>
+                        @if (Cart::Count()>0)
                         <a href="/delete_all_cart">カートを空にする</a>
+                        @endif
                     </div>
-                    @endif
                 </div>
             </div>
         </div>

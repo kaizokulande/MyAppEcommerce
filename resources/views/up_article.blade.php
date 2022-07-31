@@ -6,8 +6,7 @@
 <div class="contain">
     <div class="content">
     <div class="article_upload">
-        <h4>informations</h4>
-        <p>商品アップデートする。</p>
+        <h4>商品アップデートする。</h4>
         <div class="form-group-article">
             <div class="article_image"><img id="article_img" src="{{ asset($article->small_images) }}"></div><br/>
             @if(session('error_log'))

@@ -1,6 +1,36 @@
 @include('templates/shop_header') 
-
-    <div class="shop_products">
+    <div class="stock-sidebar">
+    <span id="close-nav">&times;</span>
+        <ul>
+            <li>
+                <a href="/{{$shop->shop_name}}/stock">
+                    <div class="dashboard-surf">
+                        <div class="dashboard-surf-icon">
+                            <span><i class="fas fa-box surf-icon v-btn" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="dashboard-surf-txt v-btn"><span>ストック</span></div>
+                    <div>
+                </a>
+            </li>
+            <li>
+                <a href="/{{$shop->shop_name}}/shop_solded">
+                    <div class="dashboard-surf">
+                        <div class="dashboard-surf-icon">
+                            <span><i class="fas fa-box-open surf-icon v-btn" aria-hidden="true"></i></span>
+                        </div>
+                    <div class="dashboard-surf-txt v-btn"><span>売られた商品</span></div>
+                </a>
+            </li>
+            <li>
+                <div class="dashboard-surf active-surf">
+                    <div class="dashboard-surf-icon">
+                        <span><i class="fas fa-cog surf-icon v-btn" aria-hidden="true"></i></span>
+                    </div>
+                <div class="dashboard-surf-txt v-btn"><span>設定</span></div>
+            </li>
+        </ul>
+    </div>  
+    <div class="stock_products">
         <h2>設定</h2>
         <div class="setting">
             <div class="grid-content">

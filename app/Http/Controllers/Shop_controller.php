@@ -90,24 +90,28 @@ class Shop_controller extends Base_controller
         }
     }
     function add_article_view(Request $request){
-        $shop_ses = session()->get('shop_ses');
-        $data['shop'] = Shop::get_shop($shop_ses['shop_name']);
-        if($data['shop'] !== null){
-            $user = Auth::user();
-            $data['admin'] = User_admin::get_admin($data['shop']->id_shop,$user->id);
-            $data['admins'] = User_admin::get_admins_list($data['shop']->id_shop,$user->id);
-            $data['categories_articles'] = parent::getCategories();
-            $data['categories'] = parent::getCategories_shop($data['shop']->id_shop);
-            return view('shop_add_article',$data);
+        if(Auth::check()){
+            $shop_ses = session()->get('shop_ses');
+            $data['shop'] = Shop::get_shop($shop_ses['shop_name']);
+            if($data['shop'] !== null){
+                $user = Auth::user();
+                $data['admin'] = User_admin::get_admin($data['shop']->id_shop,$user->id);
+                $data['admins'] = User_admin::get_admins_list($data['shop']->id_shop,$user->id);
+                $data['categories_articles'] = parent::getCategories();
+                $data['categories'] = parent::getCategories_shop($data['shop']->id_shop);
+                return view('shop_add_article',$data);
+            }else{
+                return redirect('/');
+            }
         }else{
-            return redirect('/');
+            return redirect('login')->with('login_error','ログインしてください。');
         }
     }
     function upload_article(Request $request){
-        $shop = Shop::get_shop($request->shop_name);
         if(Auth::check()){
             if(Gate::allows('isSubscribedShop')){
                 if(Gate::allows('canUploadArticle')){
+                    $shop = Shop::get_shop($request->shop_name);
                     $user = Auth::user();
                     $request->validate([
                         'image' => 'required | mimes:jpeg,png',
@@ -116,6 +120,9 @@ class Shop_controller extends Base_controller
                         'size' => 'required',
                         'quantity' => 'required | gte:1',
                     ]);
+                    if($request->color=='ありません'){
+                        $request->color= '';
+                    }
                     $description = parent::space_nl($request->description);
                     $imgfile = $request->image;
                     $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();
@@ -177,6 +184,8 @@ class Shop_controller extends Base_controller
             }
             $articles_length = Shop::count_search($data['shop']->id_shop,$request->search);
             $articles_per_page = 9;
+            $data['cover'] = Shop::get_commercial();
+            if($data['cover'] == null) $data['cover']='not defined';
             $data['search'] = $request->search;
             $data['next_page'] = $request->page+1;
 		    $data['prev_page'] = $request->page-1;
@@ -209,6 +218,8 @@ class Shop_controller extends Base_controller
             }
             $articles_length = Shop::count_categorie_articles($data['shop']->id_shop,$request->categorie);
             $articles_per_page = 9;
+            $data['cover'] = Shop::get_commercial();
+            if($data['cover'] == null) $data['cover']='not defined';
             $data['categorie'] = $request->categorie;
             $data['next_page'] = $request->page+1;
 		    $data['prev_page'] = $request->page-1;

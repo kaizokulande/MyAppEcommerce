@@ -75,6 +75,8 @@ Route::get('/delete_all_cart',[Cart_controller::class,'delete_cart']);
 Route::get('/stock',[Stock_controller::class,'stock_view'])->name('stock');
 Route::get('/stock/{page}/{order}',[Stock_controller::class,'stock_view'])->name('stock');
 Route::get('/stock/{page}/{order}/{col_name}',[Stock_controller::class,'stock_view'])->name('stock');
+Route::get('/up_article/{id_article}/{article_name}',[Stock_controller::class,'update_articles_view']);
+Route::post('/article_update/{id_article}',[Stock_controller::class,'update_articles_stock']);
 Route::get('/update',[Stock_controller::class,'update_article'])->name('update_article');
 Route::get('/delete',[Stock_controller::class,'delete_article'])->name('delete_article');
 Route::get('/sort_articles',[Stock_controller::class,'sort_table'])->name('sort');
@@ -110,6 +112,8 @@ Route::get('/shop/{shop_name}/categorie/{categorie}/page/{page}',[Shop_controlle
 Route::get('/{shop_name}/stock',[Shop_stock_controller::class,'stock_view'])->name('shop_stock');
 Route::get('/{shop_name}/stock/{page}/{order}',[Shop_stock_controller::class,'stock_view'])->name('shop_stock');
 Route::get('/{shop_name}/stock/{page}/{order}/{col_name}',[Shop_stock_controller::class,'stock_view'])->name('shop_stock');
+Route::get('/{shop_name}/up_article/{id_article}/{article_name}',[Shop_stock_controller::class,'update_articles_view']);
+Route::post('/update_article/{id_article}',[Shop_stock_controller::class,'update_articles_stock']);
 Route::get('/shop/shop_update',[Shop_stock_controller::class,'update_article'])->name('update_shop_article');
 Route::get('/shop/shop_delete',[Shop_stock_controller::class,'delete_article'])->name('delete_shop_article');
 Route::get('/shop/sort_articles_shop',[Shop_stock_controller::class,'sort_table'])->name('sort-shop');
@@ -129,7 +133,7 @@ Route::post('/shop/change_link',[Setting_controller::class,'change_web'])->name(
 Route::post('/shop/users_admin',[Setting_controller::class,'search_user'])->name('user_search');
 Route::post('/shop/add_admin',[Setting_controller::class,'add_admin'])->name('admin_add');
 Route::get('/shop/del_adm/{user}',[Setting_controller::class,'adm_del']);
-Route::post('/shop/add_cm',[Setting_controller::class,'add_commercial']);
+Route::post('/shop/add_cm',[Setting_controller::class,'add_commercial'])->name('add_cover');
 
 /* log out */
 Route::get('/u/logout',[Users_controller::class,'user_logout']);

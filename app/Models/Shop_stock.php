@@ -85,8 +85,8 @@ class Shop_stock extends Model
         foreach($articles as $art){
             $output .='
             <tr>
-                <td><a href="up_article/'.$art->id_article.'/'.$art->article_name.'"><img class="img-cart" src="'.asset($art->small_images).'"></a></td>
-                <td><a href="up_article/'.$art->id_article.'/'.$art->article_name.'">'.$art->article_name.'</a></td>
+                <td><a href="/'.$shop_name.'/'.'up_article/'.$art->id_article.'/'.$art->article_name.'"><img class="img-cart" src="'.asset($art->small_images).'"></a></td>
+                <td><a href="/'.$shop_name.'/'.'up_article/'.$art->id_article.'/'.$art->article_name.'">'.$art->article_name.'</a></td>
                 <td>'.$art->sizes.'</td>
                 <td>'.$art->color.'</td>
                 <td id="quantity">'.$art->quantity.'</td>

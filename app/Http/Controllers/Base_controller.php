@@ -122,14 +122,9 @@ class Base_controller extends Controller
             $image_resize->save($big_path);
             $image_resize->resize(200,200);
             $image_resize->save($small_path);
-            $paths = array(
-                'small_path' => $small_path,
-                'big_path' => $big_path
-            );
-            return $paths;
         }
      }
-    function image_cm_upload($imgfile,$cover_path){
+    /* function image_cm_upload($imgfile,$cover_path){
         $path_img='';
         if($imgfile != NULL){
             $imgfile_sbstr = substr($imgfile,strpos($imgfile,',') +1);
@@ -142,6 +137,12 @@ class Base_controller extends Controller
             $path_img = $cover_path . $img_name;
         }
         return $path_img;
+    } */
+    function image_cm_upload($imgfile,$cover_path){
+        if($imgfile != NULL){
+            $image_resize = Image::make($imgfile->getRealPath());
+            $image_resize->save($cover_path,40,'jpg');
+        }
     }
     /* add space db */
     function space_nl($text){

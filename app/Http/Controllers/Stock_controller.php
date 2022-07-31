@@ -46,7 +46,6 @@ class Stock_controller extends Base_controller
         $article = Article_controller::get_article($request->id_article);
         $shop_name = null;
         if(Auth::check()){
-            if(Gate::allows('isSubscribed')){
                 $user = Auth::user();
                 $request->validate([
                     'name' => 'required',
@@ -71,9 +70,6 @@ class Stock_controller extends Base_controller
                 $sql = DB::update(sprintf($sql,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path,$request->id_article));
                 $success_mess = 'この商品はアップデートされました。';
                 return redirect('up_article/'.$article->id_article.'/'.$request->name)->with('success',$success_mess);
-            }else{
-                return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
-            }
         }else{
             return redirect('/');
         }

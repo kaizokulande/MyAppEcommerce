@@ -8,23 +8,28 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Intervention\Image\ImageManagerStatic as Image;
 use Validator;
 class Setting_controller extends Base_controller
 {
     
     function setting_view(Request $request){
         $user = Auth::user();
-        $shop_ses = session()->get('shop_ses');
-        $data['shop'] = Shop::get_shop($shop_ses['shop_name']);
-        if($data['shop'] !== null){
-            $shop_ses = array('id_shop'=>$data['shop']->id_shop,'shop_name'=>$data['shop']->shop_name);
-            parent::stock_ses($request,$shop_ses);
-            $data['admin'] = User_admin::get_admin($data['shop']->id_shop,$user->id);
-            $admins = User_admin::get_admins_list($data['shop']->id_shop,$user->id);
-            $data['categories'] = parent::getCategories_shop($data['shop']->id_shop);
-            return view('shop_setting',compact('admins'))->with('shop',$data['shop'])->with('admin',$data['admin'])->with('categories',$data['categories']);
+        if($user!=null){
+            $shop_ses = session()->get('shop_ses');
+            $data['shop'] = Shop::get_shop($shop_ses['shop_name']);
+            if($data['shop'] !== null){
+                $shop_ses = array('id_shop'=>$data['shop']->id_shop,'shop_name'=>$data['shop']->shop_name);
+                parent::stock_ses($request,$shop_ses);
+                $data['admin'] = User_admin::get_admin($data['shop']->id_shop,$user->id);
+                $admins = User_admin::get_admins_list($data['shop']->id_shop,$user->id);
+                $data['categories'] = parent::getCategories_shop($data['shop']->id_shop);
+                return view('shop_setting',compact('admins'))->with('shop',$data['shop'])->with('admin',$data['admin'])->with('categories',$data['categories']);
+            }else{
+                return redirect('/');
+            }
         }else{
-            return redirect('/');
+            return redirect('login')->with('login_error','ログインしてください。');
         }
     }
     function change_name(Request $request){
@@ -184,13 +189,17 @@ class Setting_controller extends Base_controller
     function add_commercial(Request $request){
         if(Gate::allows('isSubscribedShop')){
             $request->validate([
+                'cover_pict'=> 'required',
                 'title' => 'max:50',
             ]);
+            $image = $request->cover_pict;
             $shop_ses = session()->get('shop_ses');
+            $filename = base64_encode($image.''.time());
             $path = parent::cover_folders($shop_ses['shop_name']);
-            $file_path = parent::image_cm_upload($request->image,$path);
-            Setting::add_cover_cm($shop_ses['id_shop'],$request->title,$file_path);
-            echo json_encode('success');
+            $f_path = $path.$filename;
+            parent::image_cm_upload($image,$f_path);
+            Setting::add_cover_cm($shop_ses['id_shop'],$request->title,$f_path);
+            return redirect()->back();
         }else{
             return redirect()->route('plans')->with('error_subs','プランに登録してください！！');
         }
