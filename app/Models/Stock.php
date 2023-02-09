@@ -72,13 +72,13 @@ class Stock extends Model
         $output .= '
             <table class="tab">
             <tr>
-                <th>Picture</th>
-                <th><a class="col-sort" id="sort-name" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Articles</a></th>
-                <th><a class="col-sort" id="sort-size" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">sizes</a></th>
-                <th><a class="col-sort" id="sort-color" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Color</a></th>
-                <th><a class="col-sort" id="sort-quantity" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Quantity</a></th>
-                <th><a class="col-sort" id="sort-price" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Prix yen</a></th>
-                <th>Update</th>
+                <th>Image</th>
+                <th><a class="col-sort" id="sort-name" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Article</a></th>
+                <th><a class="col-sort" id="sort-size" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">taille</a></th>
+                <th><a class="col-sort" id="sort-color" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Couleur</a></th>
+                <th><a class="col-sort" id="sort-quantity" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Quantité</a></th>
+                <th><a class="col-sort" id="sort-price" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Prix (Dolar)</a></th>
+                <th>Modifier</th>
                 <th><a class="col-sort" id="sort-total" data-order="'.$new_order.'" href="'.route('sort',['page'=>$current_page]).'">Total</a></th>
             </tr>';
         foreach($articles as $art){
@@ -89,7 +89,7 @@ class Stock extends Model
                 <td>'.$art->sizes.'</td>
                 <td>'.$art->color.'</td>
                 <td id="quantity">'.$art->quantity.'</td>
-                <td id="price">'.number_format($art->price).'¥</td>
+                <td id="price">'.number_format($art->price,2,'.',',').'¥</td>
                 <td>
                     <a class="minus" href="'.route('update_article', ['action'=>'minus','article'=>$art->id_article]).'">
                         <button><i class="fas fa-minus"></i></button>
@@ -102,7 +102,7 @@ class Stock extends Model
                         <button class="tab-delete"><i class="fas fa-times"></i></button>
                     </a>
                 </td>
-                <td id="total">'.number_format($art->total_price).' ¥</td>
+                <td id="total">'.number_format($art->total_price,2,'.',',').' ¥</td>
             </tr>';
         }
         $output .= '</table><br/>
@@ -182,14 +182,14 @@ class Stock extends Model
         $output .= '
             <table class="tab">
             <tr>
-                <th><a class="col-sort" id="sort-pdate" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Dates</a></th>
-                <th>Picture</th>
-                <th><a class="col-sort" id="sort-name" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Articles</a></th>
-                <th><a class="col-sort" id="sort-size" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">sizes</a></th>
-                <th><a class="col-sort" id="sort-color" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Color</a></th>
-                <th><a class="col-sort" id="sort-quantity" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Quantity</a></th>
-                <th><a class="col-sort" id="sort-price" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Prix yen</a></th>
-                <th>Delete</th>
+                <th><a class="col-sort" id="sort-pdate" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Date</a></th>
+                <th>Image</th>
+                <th><a class="col-sort" id="sort-name" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Article</a></th>
+                <th><a class="col-sort" id="sort-size" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">taille</a></th>
+                <th><a class="col-sort" id="sort-color" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Couleur</a></th>
+                <th><a class="col-sort" id="sort-quantity" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Quantité</a></th>
+                <th><a class="col-sort" id="sort-price" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Prix (Dolar)</a></th>
+                <th>Supprimer</th>
                 <th><a class="col-sort" id="sort-total" data-order="'.$new_order.'" href="'.route('sort_purchased',['page'=>$current_page]).'">Total</a></th>
             </tr>';
         foreach($articles as $art){
@@ -201,13 +201,13 @@ class Stock extends Model
                 <td>'.$art->sizes.'</td>
                 <td>'.$art->color.'</td>
                 <td id="quantity">'.$art->quantity.'</td>
-                <td id="price">'.number_format($art->price).'¥</td>
+                <td id="price">'.number_format($art->price,2,'.',',').'¥</td>
                 <td>
                     <a class="del" href="'.route('delete_p_article', ['article'=>$art->id_article]).'">
                         <button class="tab-delete"><i class="fas fa-times"></i></button>
                     </a>
                 </td>
-                <td id="total">'.number_format($art->total_price).' ¥</td>
+                <td id="total">'.number_format($art->total_price,2,'.',',').' ¥</td>
             </tr>';
         }
         $output .= '</table><br/>
@@ -284,14 +284,14 @@ class Stock extends Model
         $output .= '
             <table class="tab">
             <tr>
-                <th><a class="col-sort" id="sort-sdate" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Dates</a></th>
-                <th>Picture</th>
-                <th><a class="col-sort" id="sort-name" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Articles</a></th>
-                <th><a class="col-sort" id="sort-size" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">sizes</a></th>
-                <th><a class="col-sort" id="sort-color" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Color</a></th>
-                <th><a class="col-sort" id="sort-quantity" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Quantity</a></th>
-                <th><a class="col-sort" id="sort-price" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Prix yen</a></th>
-                <th>Delete</th>
+                <th><a class="col-sort" id="sort-sdate" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Date</a></th>
+                <th>Image</th>
+                <th><a class="col-sort" id="sort-name" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Article</a></th>
+                <th><a class="col-sort" id="sort-size" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">taille</a></th>
+                <th><a class="col-sort" id="sort-color" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Couleur</a></th>
+                <th><a class="col-sort" id="sort-quantity" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Quantité</a></th>
+                <th><a class="col-sort" id="sort-price" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Prix (Dolar)</a></th>
+                <th>Supprimer</th>
                 <th><a class="col-sort" id="sort-total" data-order="'.$new_order.'" href="'.route('sort_solded',['page'=>$current_page]).'">Total</a></th>
             </tr>';
         foreach($articles as $art){
@@ -303,13 +303,13 @@ class Stock extends Model
                 <td>'.$art->sizes.'</td>
                 <td>'.$art->color.'</td>
                 <td id="quantity">'.$art->quantity.'</td>
-                <td id="price">'.number_format($art->price).'¥</td>
+                <td id="price">'.number_format($art->price,2,'.',',').' $</td>
                 <td>
                     <a class="del" href="'.route('delete_s_article', ['article'=>$art->id_article]).'">
                         <button class="tab-delete"><i class="fas fa-times"></i></button>
                     </a>
                 </td>
-                <td id="total">'.number_format($art->total_price).' ¥</td>
+                <td id="total">'.number_format($art->total_price,2,'.',',').' $</td>
             </tr>';
         }
         $output .= '</table><br/>

@@ -10,7 +10,7 @@
                                         <div class="dashboard-surf-icon">
                                             <span><i class="fas fa-box surf-icon v-btn" aria-hidden="true"></i></span>
                                         </div>
-                                        <div class="dashboard-surf-txt v-btn"><span>ストック</span></div>
+                                        <div class="dashboard-surf-txt v-btn"><span>Stock</span></div>
                                     <div>
                                 </a>
                             </li>
@@ -20,7 +20,7 @@
                                         <div class="dashboard-surf-icon">
                                             <span><i class="fas fa-box-open surf-icon v-btn" aria-hidden="true"></i></span>
                                         </div>
-                                    <div class="dashboard-surf-txt v-btn"><span>売られた商品</span></div>
+                                    <div class="dashboard-surf-txt v-btn"><span>Vendu</span></div>
                                 </a>
                             </li>
                             <li>
@@ -28,29 +28,30 @@
                                     <div class="dashboard-surf-icon">
                                         <span><i class="fas fa-inbox surf-icon v-btn" aria-hidden="true"></i></span>
                                     </div>
-                                <div class="dashboard-surf-txt v-btn"><span>買った商品</span></div>
+                                <div class="dashboard-surf-txt v-btn"><span>Acheté</span></div>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="stock">
-                    <h2>買った商品</h2>
+                    <h2>Acheté</h2>
                     <div class="loader" role="status" area-hidden="true" style="display: none;">
                         <img src="{{ asset('/images/load/ico-loading.gif') }}">
                         <span class="sr-only">loading...</span>
                     </div>
                     <div style="color:red"><span id="error"></span></div>
                     <div id="st_table">
+                    @if (count($articles)>0)
                         <table class="tab">
                             <tr>
-                                <th><a class="col-sort" id="sort-pdate" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Dates</a></th>
-                                <th>Picture</th>
-                                <th><a class="col-sort" id="sort-name" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Articles</a></th>
-                                <th><a class="col-sort" id="sort-size" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">sizes</a></th>
-                                <th><a class="col-sort" id="sort-color" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Color</a></th>
-                                <th><a class="col-sort" id="sort-quantity" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Quantity</a></th>
-                                <th><a class="col-sort" id="sort-price" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Prix yen</a></th>
-                                <th>Delete</th>
+                                <th><a class="col-sort" id="sort-pdate" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Date</a></th>
+                                <th>Image</th>
+                                <th><a class="col-sort" id="sort-name" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Article</a></th>
+                                <th><a class="col-sort" id="sort-size" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Taille</a></th>
+                                <th><a class="col-sort" id="sort-color" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Couleur</a></th>
+                                <th><a class="col-sort" id="sort-quantity" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Quantité</a></th>
+                                <th><a class="col-sort" id="sort-price" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Prix (Dolar)</a></th>
+                                <th>Supprimer</th>
                                 <th><a class="col-sort" id="sort-total" data-order="desc" href="{!! route('sort_purchased',['page'=>$current_page]) !!}">Total</a></th>
                             </tr>
                             <!-- tr -->
@@ -62,17 +63,23 @@
                                     <td>{{ $art->sizes }}</td>
                                     <td>{{ $art->color }}</td>
                                     <td id="quantity">{{ $art->quantity }}</td>
-                                    <td id="price">{{ number_format($art->price) }}¥</td>
+                                    <td id="price">{{ number_format($art->price,2,'.',',') }} $</td>
                                     <td>
                                         <a class="del" href="{!! route('delete_p_article', ['article'=>$art->id_article]) !!}">
                                             <button class="tab-delete"><i class="fas fa-times"></i></button>
                                         </a>
                                     </td>
-                                    <td id="total">{{ number_format($art->total_price) }} ¥</td>
+                                    <td id="total">{{ number_format($art->total_price,2,'.',',') }} $</td>
                                 </tr>
                             @endforeach
                             <!-- /tr -->
                         </table><br/>
+                        @elseif (count($articles)<=0)
+                            <div class="lot">
+                                <lottie-player src="{{asset('../lotties/4496-empty-cart.json')}}" background="transparent"  speed="0.6"  style="width: 30%;margin:auto" loop autoplay></lottie-player>
+                                <span>Pas d'article acheté.</span>
+                            </div>
+                        @endif
                         <div class="page-list">
                             @if ($total_page>1)
                                 @if ($total_page < 6)

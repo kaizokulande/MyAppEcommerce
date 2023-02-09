@@ -39,7 +39,7 @@ class Stock_controller extends Base_controller
         }else{
             $article->descriptions = parent::br_space_to_normal($article->descriptions);;
             $data['article'] = $article;
-            return view('up_article',$data);
+            return view('update_article',$data);
         }
     }
     function update_articles_stock(Request $request){
@@ -49,11 +49,16 @@ class Stock_controller extends Base_controller
                 $user = Auth::user();
                 $request->validate([
                     'name' => 'required',
-                    'price' => 'required | gte:100 | lte:100000001',
+                    'price' => 'required | lte:100000001',
+                    'price' => 'gte:10',
                     'size' => 'required',
                     'quantity' => 'required | gte:1',
                 ]);
-                $description = parent::space_nl($request->description);
+                $name = htmlspecialchars($request->name);
+                $size = htmlspecialchars($request->size);
+                $description = htmlspecialchars($request->description);
+                $description = parent::space_nl($description);
+
                 $imgfile = $request->image;
                 $filename="";
                 if($imgfile == null){
@@ -66,9 +71,10 @@ class Stock_controller extends Base_controller
                 $s_path = parent::small_folders($shop_name);
                 $small_path = $s_path.''.$filename;
                 parent::image_upload($imgfile,$big_path,$small_path);
-                $sql= "UPDATE articles SET id_categorie ='%s', article_name='%s', color='%s', sizes='%s', quantity='%s', price='%s', creation_date=NOW(), descriptions='%s', total_price = calctotal('%s','%s'), large_images='%s', small_images='%s', states='on sale' WHERE id_article='%s'";
-                $sql = DB::update(sprintf($sql,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path,$request->id_article));
-                $success_mess = 'この商品はアップデートされました。';
+                $total = parent::calctotal($request->quantity,$request->price);
+                $sql= "UPDATE articles SET id_categorie ='%s', article_name='%s', color='%s', sizes='%s', quantity='%s', price='%s', creation_date=NOW(), descriptions='%s', total_price = '%s', large_images='%s', small_images='%s', states='on sale' WHERE id_article='%s'";
+                $sql = DB::update(sprintf($sql,$request->categorie,$name,$request->color,$size,$request->quantity,$request->price,$description,$total,$big_path,$small_path,$request->id_article));
+                $success_mess = 'Modification réussi!';
                 return redirect('up_article/'.$article->id_article.'/'.$request->name)->with('success',$success_mess);
         }else{
             return redirect('/');
@@ -86,10 +92,10 @@ class Stock_controller extends Base_controller
                 );
                 echo json_encode($data);
             }else{
-                sleep(1);
                 $new_quantity = $article->quantity - $request->quantity;
-                $sql= "UPDATE articles SET quantity='%s',total_price=calctotal('%s','%s')  WHERE id_article='%s'";
-                $sql = DB::update(sprintf($sql,$new_quantity,$article->price,$new_quantity,$request->article));
+                $total = parent::calctotal($new_quantity,$article->price);
+                $sql= "UPDATE articles SET quantity='%s',total_price='%s'  WHERE id_article='%s'";
+                $sql = DB::update(sprintf($sql,$new_quantity,$total,$request->article));
                 $data = array(
                     'quantity' => $new_quantity,
                     'price' => number_format($article->price),
@@ -108,10 +114,10 @@ class Stock_controller extends Base_controller
                 );
                 echo json_encode($data);
             }else{
-                sleep(1);
                 $new_quantity = $article->quantity + $request->quantity;
-                $sql= "UPDATE articles SET quantity='%s',total_price=calctotal('%s','%s')  WHERE id_article='%s'";
-                $sql = DB::update(sprintf($sql,$new_quantity,$article->price,$new_quantity,$request->article));
+                $total = parent::calctotal($new_quantity,$article->price);
+                $sql= "UPDATE articles SET quantity='%s',total_price='%s'  WHERE id_article='%s'";
+                $sql = DB::update(sprintf($sql,$new_quantity,$total,$request->article));
                 $data = array(
                     'quantity' => $new_quantity,
                     'price' => number_format($article->price),
@@ -121,12 +127,14 @@ class Stock_controller extends Base_controller
             }
         }
     }
+
     /* delete article */
     function delete_article(Request $request){
         $article = Article_controller::get_article_delete($request->article,$request->name);
         $sql = "UPDATE articles SET states='deleted',delete_date=now()  WHERE id_article='%s'";
         $sql = DB::update(sprintf($sql,$article->id_article));
     }
+
     /* sort article user */
     public function sort_table(Request $request){
         $col_name = parent::get_col_name($request->col_name);
@@ -139,6 +147,7 @@ class Stock_controller extends Base_controller
         $data['articles'] = Stock::order_articles($user->id,$request->order,$col_name,$request->col_name,$depart,$articles_per_page,$page,$total_page);
         echo json_encode($data);
     }
+
     /* purchased view */
     function purchased_view(Request $request){
         $user = Auth::user();
@@ -174,6 +183,7 @@ class Stock_controller extends Base_controller
         $data['articles'] = Stock::order_purchased_articles($user->id,$request->order,$col_name,$request->col_name,$depart,$articles_per_page,$page,$total_page);
         echo json_encode($data);
     }
+
     /* delete purchased article */
     function delete_p_article(Request $request){
         $article = Stock::get_purchased_delete($request->article);
@@ -203,6 +213,7 @@ class Stock_controller extends Base_controller
         $data['articles'] = Stock::get_s_articles($orderpage['order'],$col_name,$user->id,$depart,$articles_per_page);
         return view('solded',$data);
     }
+
     function sort_solded_articles(Request $request){
         $sort_colname = $this->sort_colname($request->col_name, 'sort-sdate');
         $col_name = parent::get_col_name($sort_colname);
@@ -215,6 +226,7 @@ class Stock_controller extends Base_controller
         $data['articles'] = Stock::order_solded_articles($user->id,$request->order,$col_name,$request->col_name,$depart,$articles_per_page,$page,$total_page);
         echo json_encode($data);
     }
+    
     /* delete purchased article */
     function delete_s_article(Request $request){
         $article = Stock::get_solded_delete($request->article);

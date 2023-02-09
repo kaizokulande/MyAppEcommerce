@@ -1,3 +1,5 @@
+-- Active: 1673506242885@@127.0.0.1@3306@kaibaidb
+
 CREATE USER 'sakuradb'@'localhost' IDENTIFIED BY 'NOkaizoku13010407';
 GRANT ALL PRIVILEGES ON SDB.* TO 'sakuradb'@'localhost' WITH GRANT OPTION;
 CREATE DATABASE kaibaidb;
@@ -13,24 +15,16 @@ CREATE TABLE users(
 	email_verified_at TIMESTAMP,
 	remember_token TEXT,
     password TEXT,
-	logo_type VARCHAR(20),
-    sign_date TIMESTAMP NOT NULL,
+	logo_type VARCHAR(30),
+    sign_date TIMESTAMP NULL,
     delete_date TIMESTAMP NULL,
     spec VARCHAR(7),
-	last_seen TIMESTAMP   
+	last_seen TIMESTAMP NULL,
+	status INT
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-	/* alter table users add column rememberToken TEXT after email_verified_at;
-	alter table users modify column email TEXT; */
-/* alter table users modify column logo_type VARCHAR(20);
-alter table users CHANGE password u_password TEXT;
-update users set logo_type="images/kaibai_h.png" where id=2;
-update users set logo_type="images/kaibai_h.png" where id=3;
-update users set logo_type="images/kaibai_h.png" where id=5;
-update users set logo_type="images/kaibai_f.png" where id=4; */
-
+ALTER TABLE users ADD COLUMN status INT;
+ALTER TABLE users MODIFY logo_type VARCHAR(30);
 
 CREATE TABLE confirm_users(
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -39,7 +33,7 @@ CREATE TABLE confirm_users(
 	FOREIGN KEY (id_user) REFERENCES users(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE categories(
+CREATE TABLE fr_categories(
 	id_categorie INT UNSIGNED NOT NULL PRIMARY KEY,
 	categorie VARCHAR(50)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -74,17 +68,18 @@ CREATE TABLE articles(
     delete_date TIMESTAMP NULL,
     descriptions TEXT,
 	discount INT,
-	total_price INT,
+	total_price FLOAT,
 	large_images TEXT,
     small_images TEXT,
 	states VARCHAR(8),
-    FOREIGN KEY (id_categorie) REFERENCES categories(id_categorie),
-    FOREIGN KEY (id) REFERENCES users(id),
+    FOREIGN KEY (id_categorie) REFERENCES fr_categories(id_categorie),
+    FOREIGN KEY (id) REFERENCES users(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE articles MODIFY total_price FLOAT;
 /* alter table articles add id_creator_shop INT UNSIGNED NOT NULL after id; */
 
-CREATE OR REPLACE VIEW articles_categories AS SELECT articles.*,categories.categorie FROM articles,categories WHERE articles.id_categorie=categories.id_categorie;
+CREATE OR REPLACE VIEW articles_categories AS SELECT articles.*,fr_categories.categorie FROM articles,fr_categories WHERE articles.id_categorie=fr_categories.id_categorie;
 
 
 
@@ -148,7 +143,7 @@ CREATE TABLE old_articles(
 	FOREIGN KEY (id_shop) REFERENCES shops(id_shop)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-landernaud-ramampjean@gmail.com
+
 CREATE TABLE shop_oldinfo(
     id INT UNSIGNED NOT NULL ,
     id_shop INT UNSIGNED NOT NULL,
@@ -241,29 +236,18 @@ BEGIN
 END;
 // DELIMITER;
 
-	INSERT INTO categories VALUES(001,'ファッション');
-	INSERT INTO categories VALUES(002,'ファッション小物');
-	INSERT INTO categories VALUES(003,'キッズ・ベビー・玩具');
-	INSERT INTO categories VALUES(004,'スポーツ・ゴルフ');
-	INSERT INTO categories VALUES(005,'家電・TV・カメラ');
-	INSERT INTO categories VALUES(006,'PC・スマホ・通信');
-	INSERT INTO categories VALUES(007,'食品・スイーツ');
-	INSERT INTO categories VALUES(008,'ドリンク・お酒');
-	INSERT INTO categories VALUES(009,'インテリア・寝具');
-	INSERT INTO categories VALUES(010,'本・電子書籍・音楽');
-	INSERT INTO categories VALUES(011,'ゲーム・ホビー・楽器');
-	INSERT INTO categories VALUES(012,'美容・コスメ・香水');
-	INSERT INTO categories VALUES(013,'スキンケア');
-	INSERT INTO categories VALUES(014,'ヘアケア・スタイリング');
-	INSERT INTO categories VALUES(015,'ボディケア');
-	INSERT INTO categories VALUES(016,'アロマ・お香');
-	INSERT INTO categories VALUES(017,'ダイエット');
-	INSERT INTO categories VALUES(018,'デンタルケア');
-	INSERT INTO categories VALUES(019,'リラックス・マッサージ用品');
-	INSERT INTO categories VALUES(020,'コンタクトレンズ・ケア用品');
-	INSERT INTO categories VALUES(021,'ペット・花・DIY工具');
-	INSERT INTO categories VALUES(022,'ハンドメイド');
-	INSERT INTO categories VALUES(023,'日用雑貨・キッチン用品');
+	INSERT INTO fr_categories VALUES(001,'Fashion');
+	INSERT INTO fr_categories VALUES(003,'Bébé');
+	INSERT INTO fr_categories VALUES(004,'Sport');
+	INSERT INTO fr_categories VALUES(005,'Telephone,Camera,TV');
+	INSERT INTO fr_categories VALUES(006,'PC');
+	INSERT INTO fr_categories VALUES(007,'Chaussures et Bottes');
+	INSERT INTO fr_categories VALUES(008,'Meuble');
+	INSERT INTO fr_categories VALUES(009,'Livre');
+	INSERT INTO fr_categories VALUES(010,'Jeux Video');
+	INSERT INTO fr_categories VALUES(011,'Beauté');
+	INSERT INTO fr_categories VALUES(012,'Parfum');
+	INSERT INTO fr_categories VALUES(013,'Cuisine');
  
 /*---------------------OK -------------------*/
 /* ALTER TABLE user_solded_articles ADD delete_date TIMESTAMP AFTER solded_dates; */
@@ -324,7 +308,7 @@ SET autocommit=0;
 SELECT * FROM users WHERE email='landernaud@gmail.com' AND u_password=(SELECT SHA1('12345678'));
 
 /* Stock users */
-CREATE OR REPLACE VIEW articles_user AS SELECT articles.*,categories.categorie FROM articles,categories WHERE articles.id_categorie=categories.id_categorie AND articles.id_shop=0;
+CREATE OR REPLACE VIEW articles_user AS SELECT articles.*,fr_categories.categorie FROM articles,fr_categories WHERE articles.id_categorie=fr_categories.id_categorie AND articles.id_shop=0;
 
 /* /users sum solded articles */
 CREATE OR REPLACE VIEW sums_user AS SELECT MAX(solded_dates) AS dates,id_article, SUM(quantity) AS quantity,SUM(total_price) AS total_price FROM user_solded_articles WHERE states!='deleted' GROUP BY id_article;

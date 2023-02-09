@@ -17,13 +17,20 @@ class Article_controller extends Base_controller
             $request->validate([
                 'image' => 'required | mimes:jpeg,png',
                 'name' => 'required',
-                'price' => 'required | gte:100 | lte:100000001',
+                'price' => 'required | lte:100000001',
+                'price' => 'gte:10',
                 'size' => 'required',
                 'quantity' => 'required | gte:1',
             ]);
-            if($request->color=='ありません'){
+            if($request->color=='couleur'){
                 $request->color= '';
             }
+            if($request->input_color !=null){
+                $request->color= $request->input_color;
+            }
+            $name = htmlspecialchars($request->name);
+            $size = htmlspecialchars($request->size);
+            $description = htmlspecialchars($request->description);
             $description = parent::space_nl($request->description);
             $imgfile = $request->image;
             $filename = base64_encode($imgfile.''.time()).'.'.$imgfile->extension();
@@ -32,12 +39,13 @@ class Article_controller extends Base_controller
             $s_path = parent::small_folders($shop_name);
             $small_path = $s_path.''.$filename;
             parent::image_upload($imgfile,$big_path,$small_path);
-            $sql= "INSERT INTO articles(id,id_creator_shop,id_shop,id_categorie,article_name,color,sizes,quantity,price,creation_date,descriptions,total_price,large_images,small_images,states) VALUES('%s',0,0,'%s','%s','%s','%s','%s','%s',NOW(),'%s',calctotal('%s','%s'),'%s','%s','on sale')";
-            $sql = DB::insert(sprintf($sql,$user->id,$request->categorie,$request->name,$request->color,$request->size,$request->quantity,$request->price,$description,$request->price,$request->quantity,$big_path,$small_path));
-            $success_mess = 'Your article has benn uploaded successfuly. Click here if you wat to see it.';
+            $total = parent::calctotal($request->quantity,$request->price);
+            $sql= "INSERT INTO articles(id,id_creator_shop,id_shop,id_categorie,article_name,color,sizes,quantity,price,creation_date,descriptions,total_price,large_images,small_images,states) VALUES('%s',0,0,'%s','%s','%s','%s','%s','%s',NOW(),'%s','%s','%s','%s','on sale')";
+            $sql = DB::insert(sprintf($sql,$user->id,$request->categorie,$name,$request->color,$size,$request->quantity,$request->price,$description,$total,$big_path,$small_path));
+            $success_mess = 'Votre article a été ajouté avec succes!';
             return redirect('sellarticle')->with('success',$success_mess);
         }else{
-            return redirect('sellarticle')->with('error_log','Please login first Or Register if no account');
+            return redirect('sellarticle')->with('error_log','Veuillez vous connecter ou créez votre compte si vous n\'êtes pas inscrit');
         }
     }
     /* get Articles */
@@ -117,7 +125,6 @@ class Article_controller extends Base_controller
         }
         $articles_per_page = 10;
 		$articles_length = $this->get_count_articles();
-		/* $data['commercials'] = $this->news_model->get_commercial_index(); */
         $data['next_page'] = $request->page+1;
 		$data['prev_page'] = $request->page-1;
         $data['current_page'] = $request->page;
@@ -127,8 +134,9 @@ class Article_controller extends Base_controller
         $data['total_page'] = ceil($articles_length / $articles_per_page);
         $depart = ($data['page']-1)*$articles_per_page;
 		$data['articles'] = $this->get_articles($depart,$articles_per_page);
-		return view('kaibai',$data);
+		return view('home',$data);
     }
+
     function view_article(Request $request){
         $data['article'] = $this->get_article_name($request->id_article,$request->article_name);
         if($data['article']==null){
@@ -147,7 +155,6 @@ class Article_controller extends Base_controller
         }
         $articles_per_page = 10;
 		$articles_length = $this->count_search($request->search);
-		/* $data['commercials'] = $this->news_model->get_commercial_index(); */
         $data['next_page'] = $request->page+1;
 		$data['prev_page'] = $request->page-1;
         $data['current_page'] = $request->page;
@@ -158,7 +165,7 @@ class Article_controller extends Base_controller
         $data['search'] = $request->search;
         $depart = ($data['page']-1)*$articles_per_page;
 		$data['articles'] = $this->search_articles($request->search,$depart,$articles_per_page);
-		return view('kaibai_search',$data);
+		return view('search',$data);
     }
     function view_categories(Request $request){
         if($request->categorie == null){
@@ -169,7 +176,6 @@ class Article_controller extends Base_controller
         }
         $articles_per_page = 10;
 		$articles_length = $this->count_categorie_articles($request->categorie);
-		/* $data['commercials'] = $this->news_model->get_commercial_index(); */
         $data['next_page'] = $request->page+1;
 		$data['prev_page'] = $request->page-1;
         $data['current_page'] = $request->page;
@@ -180,6 +186,6 @@ class Article_controller extends Base_controller
         $data['categorie'] = $request->categorie;
         $depart = ($data['page']-1)*$articles_per_page;
 		$data['articles'] = $this->search_categorie_articles($request->categorie,$depart,$articles_per_page);
-		return view('kaibai_categorie',$data);
+		return view('categorie',$data);
     }
 }

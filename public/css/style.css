@@ -53,6 +53,9 @@ button{
 footer{
     clear: both;
 }
+footer span{
+    color:#000;
+}
 /* navbar */
 .nav{
     padding-top: 15px;
@@ -96,11 +99,9 @@ footer{
     border: none;
 }
 .navbar{
-    position: fixed;
     width: 100%;
     height: 80px;
     background-color: #f0f3ff;
-    z-index: 999;
     display: inline-block;
 }
 .wrap-buttons{
@@ -221,7 +222,6 @@ footer{
 .contain{
     width: 100%;
     min-height: 100%;
-    margin-top: 80px;
     background-color: #fff;
     text-align: center;
 }
@@ -336,7 +336,7 @@ footer{
     margin-right: 5px;
 }
 .form label{
-    margin-right: 410px;
+    margin-right: 360px;
     color: #565656;
 }
 .form #success_message{
@@ -533,168 +533,6 @@ footer{
     z-index: 1;
 }
 /* /p-item */
-/* .pict_modal{
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    padding-top: 10%;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-}
-.pict_modal .modal-contents{
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    border: 1px solid #888888;
-    width: 60%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.pict_modal .header{
-    padding: 2px;
-    background-color: var(--color);
-    color: #fff;
-}
-.pict_modal #close{
-    color: #fff;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-.pict_modal #close:hover,
-.pict_modal #close:focus{
-    color:black;
-    text-decoration: none;
-    cursor:pointer;
-}
-.pict_modal .body{
-    text-align: center;
-    background-color: #fff;
-}
-.cover-button{
-    margin-left: 150px;
-    text-align: center;
-    width:500px;
-    height:50px;
-    border-style: dotted;
-    word-break: break-all;
-}
-.pict_modal .m-footer{
-    height: 60px;
-    text-align: right;
-    padding-top: 10px;
-    padding-right: 20px;
-    background-color: var(--color);
-    color: #fff;
-}
-#image_preview{
-    margin-top: 20px;
-    max-width: 500px;
-    max-height: 200px;
-}
-.text_modal{
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    padding-top: 10%;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-}
-.text_modal .header{
-    padding: 2px;
-    background-color: var(--color);
-    color: #fff;
-}
-.text_modal .modal-contents{
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888888;
-    width: 40%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.text_modal .body{
-    height:250px;
-    padding: 2px 16px;
-    text-align: center;
-    background-color: #fff;
-}
-
-.text-modal .header{
-    padding: 2px;
-    background-color: var(--color);
-    color: #fff;
-}
-.text_modal .t-footer{
-    height: 60px;
-    text-align: right;
-    padding-top: 10px;
-    padding-right: 20px;
-    background-color: var(--color);
-    color: #fff;
-}
-.txt-close{
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-.txt-close:hover,
-.txt-close{
-    color:black;
-    text-decoration: none;
-    cursor:pointer;
-}
-.dropdwn{
-    display:inline-block;
-    width: 150px;
-}
-.btndrop{
-    margin-bottom: 10px;
-    border-radius: 10px;
-    background-color: rgb(230, 221, 221);
-	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    border: none;
-}
-.btndrop:hover{
-    background-color: var(--color);
-    outline: none;
-}
-.drop-content{
-    width:150px;
-    border-radius: 10px;
-    margin-top: -8px;
-    display: none;
-    position:absolute;
-    background-color: rgb(230, 221, 221);
-    min-width: 100px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-.drop-content a{
-    background-color: rgb(230, 221, 221);
-    padding: 12px 16px;
-    display: block;
-    text-decoration: none;
-    color: #000;
-}
-.drop-content a:hover{
-    background-color: var(--color);
-    cursor: pointer;
-    text-decoration: none;
-    color: #000;
-}
-.dropdwn:hover .drop-content{
-    display: block;
-}
 
 /* sell articles */
 .article_upload{
@@ -775,39 +613,6 @@ footer{
 }
 
 /* /sell articles */
-/*
-.img-button{
-    width:495px;
-    height:50px;
-    border-style: dotted;
-    margin-left: 10px;
-    word-break: break-all;
-}
-.inputfile{
-    z-index: -1;
-}
-.inputfile::-webkit-file-upload-button{
-    visibility: hidden;
-}
-.inputfile::before{
-    content:'Choose image...';
-    color:black;
-    display: inline-block;
-    text-decoration: underline;
-}
-.inputfile:hover::before{
-    color: var(--color);
-    cursor: pointer;
-}
-.article_image{
-    margin-top: 20px;
-    text-align: center;
-}
-.liste-shop{
-    background-color: #fff;
-    min-height: 100%;
-    text-align: center;
-} */
 
 /* article_image */
 .article_image{
@@ -859,7 +664,7 @@ footer{
 }
 .first-login label{
     width:150px;
-    margin-right: 330px;
+    margin-right: 300px;
     color: #565656;
 }
 .first-login input{
@@ -898,10 +703,10 @@ footer{
     
 }
 .pub{
-    width:400px;
-    height:300px;
     margin-top: 20px;
-    background-color: #888888;
+}
+.pub img{
+    width:350px;
 }
 .pub-div{
     width: 500px;
@@ -924,7 +729,7 @@ footer{
     visibility: hidden;
 }
 .inputfile::before{
-    content:'Choose image...';
+    content:'写真を選択...';
     color:black;
     display: inline-block;
     text-decoration: underline;
@@ -1206,14 +1011,14 @@ footer{
 }
 .success{
     background-color: rgb(156, 242, 143);
-    width: 500px;
+    width: 80%;
     height: 50px;
     margin-left: 20px;
     margin: auto;
 }
 .danger{
     background-color: rgb(249, 66, 66);
-    width: 500px;
+    width: 80%;
     height: 50px;
     margin-left: 20px;
     margin: auto;
@@ -1500,8 +1305,11 @@ footer{
 }
 .links{
     margin-top: 50px;
-} */
+}
 /* cart */
+.buy{
+    width:100%;
+}
 .cart-contain{
     width: 100%;
     margin-top: var(--margin);
@@ -1589,6 +1397,10 @@ footer{
 .error-message{
     text-align: center;
 }
+.error-message button{
+    background-color: rgb(248, 153, 153);
+    margin-bottom: 10px;
+}
 .close-error{
     color: #aaa;
     float: right;
@@ -1602,6 +1414,7 @@ footer{
     cursor: pointer;
 }
 /* /cart */
+
 /* loader */
 .loader{
     position:fixed;
@@ -1772,7 +1585,7 @@ footer{
 /* Subscription */
 .sbubs-container{
     width: 210px;
-    height: 370px;
+    min-height: 370px;
     border-radius: 5px;
     margin-top: 20px;
     margin-left: 25px;
@@ -1803,8 +1616,9 @@ footer{
     margin: auto;
     background-color: #f0f3ff;
     width: 204px;
-    height: 305px;
+    min-height: 305px;
     border-radius: 5px;
+    margin-bottom: 5px;
 }
 .subs-notice{
     font-size: 14px;
@@ -1860,4 +1674,51 @@ footer{
 }
 .active-surf{
     background-color: var(--button-hover);
+}
+.contact input[type=text]{
+    outline: 0;
+    border-width: 0 0 2px !important;
+    margin-top: 50px;
+    width: 100%;
+}
+.contact input[type=email]{
+    outline: 0;
+    border-width: 0 0 2px !important;
+    margin-top: 50px;
+    width: 100%;
+}
+.contact textarea{
+    outline: 0;
+    border-width: 0 0 2px !important;
+    margin-top: 50px;
+    width: 100%;
+    height:80px;
+}
+.contact input[type=submit]{
+    margin-left: 0;
+}
+.mail-table{
+    margin-left: 10px;
+    color: #696763;
+}
+.mail-table th{
+    border-bottom: 1px solid #696763;
+}
+.tb-body td{
+    min-width:100px;
+}
+.tb-margin{
+    height: 100px;
+    border: 0px;
+}
+.tb-td-r{
+    text-align: end;
+}
+.u-section-1-1 .u-image-1 {
+    min-height: 400px;
+    background-position: 50% 50%;
+  }
+.u-text-1,
+.u-text-2{
+    margin-left: 10px;
 }
